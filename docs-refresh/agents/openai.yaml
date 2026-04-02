@@ -1,0 +1,4 @@
+interface:
+  display_name: "Docs Refresh"
+  short_description: "Refresh authoritative docs from current diff"
+  default_prompt: "Use the Docs Refresh workflow to treat the repository as the record system, start from AGENTS.md as a map, inspect the current git diff, update the smallest authoritative documents needed, and explain what changed or why no documentation update was needed."
