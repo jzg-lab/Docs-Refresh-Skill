@@ -15,6 +15,16 @@ assert_contains() {
   fi
 }
 
+assert_not_contains() {
+  local path="$1"
+  local needle="$2"
+
+  if grep -Fq "$needle" "$path"; then
+    echo "Unexpected text found in $path: $needle" >&2
+    exit 1
+  fi
+}
+
 assert_contains "$skill_dir/SKILL.md" 'Do not assume the target repo has its own `scripts/collect_changed_context.sh`.'
 assert_contains "$skill_dir/SKILL.md" 'If the collector is unavailable, cannot be resolved from the skill directory, or shell execution is unavailable'
 assert_contains "$skill_dir/SKILL.md" 'When in doubt between `minimal` and `repair`, choose `minimal` unless the repository already has a real docs system whose map is broken.'
@@ -31,5 +41,7 @@ assert_contains "$skill_dir/modes/repair.md" '`docs/exec-plans/` exists but its 
 assert_contains "$skill_dir/modes/repair.md" 'Missing `AGENTS.md` alone is not `repair`.'
 assert_contains "$repo_root/README.md" 'the default scaffold is `docs/exec-plans/index.md`, `docs/exec-plans/active/`, and `docs/exec-plans/completed/`'
 assert_contains "$repo_root/README.md" 'placeholder files such as `.gitkeep`'
+assert_not_contains "$skill_dir/scripts/collect_changed_context.sh" 'local -n'
+assert_not_contains "$skill_dir/scripts/collect_changed_context.sh" 'declare -n'
 
 echo "Skill fallback contract checks passed."

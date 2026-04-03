@@ -78,7 +78,14 @@ is_current_state_doc_file() {
     || [[ "$path" =~ (^|/)docs/design-docs/ ]] \
     || [[ "$path" =~ (^|/)docs/product-specs/ ]] \
     || [[ "$path" =~ (^|/)(README)(\.[^.]+)?$ ]] \
-    || [[ "$path" =~ (^|/)(PROJECT_BRIEF|ARCHITECTURE|DESIGN|FRONTEND|PRODUCT_SENSE|DECISIONS|RELIABILITY|SECURITY)(\.[^.]+)?$ ]]
+    || [[ "$path" =~ (^|/)(PROJECT_BRIEF|ARCHITECTURE|DESIGN|FRONTEND|PRODUCT_SENSE|RELIABILITY|SECURITY)(\.[^.]+)?$ ]]
+}
+
+is_decision_doc_file() {
+  local path="$1"
+  [[ "$path" =~ (^|/)(DECISIONS|ADR)(\.[^.]+)?$ ]] \
+    || [[ "$path" =~ (^|/)docs(/design-docs)?/(decisions|adr|adrs)(/|$) ]] \
+    || [[ "$path" =~ (^|/)docs/design-docs/decision-log\.md$ ]]
 }
 
 is_scorecard_file() {
@@ -100,9 +107,15 @@ is_generated_doc_file() {
 
 is_plan_file() {
   local path="$1"
-  [[ "$path" =~ (^|/)docs/exec-plans/ ]] \
-    || [[ "$path" =~ (^|/)(PLANS)(\.[^.]+)?$ ]] \
-    || [[ "$path" =~ (^|/).*(plan|roadmap|debt)[^/]*\.(md|mdx|rst|adoc|txt)$ ]]
+  local name="${path##*/}"
+  local stem="${name%.*}"
+
+  [[ "$path" =~ (^|/)docs/exec-plans/ ]] && return 0
+  [[ "$path" =~ (^|/)(PLANS)(\.[^.]+)?$ ]] && return 0
+  [[ "$name" =~ \.(md|mdx|rst|adoc|txt)$ ]] || return 1
+
+  [[ "$stem" =~ (^|.*[._-])([Pp]lans?|[Rr]oadmap|[Dd]ebt)([._-].*|$) ]] \
+    || [[ "$stem" =~ ([Pp]lans?|[Rr]oadmap|[Dd]ebt)$ ]]
 }
 
 is_history_doc_file() {
@@ -111,17 +124,21 @@ is_history_doc_file() {
 }
 
 add_unique() {
-  local -n target_array="$1"
+  local target_array_name="$1"
   local value="$2"
   local existing
+  local current_values=()
 
-  for existing in "${target_array[@]}"; do
+  # Avoid Bash 4 namerefs so the collector still runs on Bash 3.2 environments.
+  eval "current_values=(\"\${${target_array_name}[@]}\")"
+
+  for existing in "${current_values[@]}"; do
     if [[ "$existing" == "$value" ]]; then
       return 0
     fi
   done
 
-  target_array+=("$value")
+  eval "$target_array_name+=(\"\$value\")"
 }
 
 has_tag() {
@@ -144,6 +161,7 @@ navigation_files=()
 current_state_doc_files=()
 reference_doc_files=()
 generated_doc_files=()
+decision_doc_files=()
 plan_doc_files=()
 history_doc_files=()
 scorecard_doc_files=()
@@ -169,9 +187,14 @@ while IFS= read -r file; do
       navigation_files+=("$file")
     fi
 
-    if is_current_state_doc_file "$file"; then
+    if is_current_state_doc_file "$file" && ! is_decision_doc_file "$file"; then
       add_unique changed_doc_areas "current-state-docs"
       current_state_doc_files+=("$file")
+    fi
+
+    if is_decision_doc_file "$file"; then
+      add_unique changed_doc_areas "decision-docs"
+      decision_doc_files+=("$file")
     fi
 
     if is_reference_doc_file "$file"; then
@@ -287,6 +310,7 @@ layout_tags=()
 preferred_targets=()
 current_state_targets=()
 reference_targets=()
+decision_targets=()
 plan_targets=()
 navigation_targets=()
 scorecard_targets=()
@@ -381,8 +405,12 @@ if has_file "docs/history"; then
   layout_tags+=("docs-history")
 fi
 
-for path in README.md PROJECT_BRIEF.md docs/PROJECT_BRIEF.md DESIGN.md docs/DESIGN.md FRONTEND.md docs/FRONTEND.md PRODUCT_SENSE.md docs/PRODUCT_SENSE.md DECISIONS.md docs/DECISIONS.md RELIABILITY.md docs/RELIABILITY.md SECURITY.md docs/SECURITY.md; do
+for path in README.md PROJECT_BRIEF.md docs/PROJECT_BRIEF.md DESIGN.md docs/DESIGN.md FRONTEND.md docs/FRONTEND.md PRODUCT_SENSE.md docs/PRODUCT_SENSE.md RELIABILITY.md docs/RELIABILITY.md SECURITY.md docs/SECURITY.md; do
   add_existing_target current_state_targets "$path"
+done
+
+for path in DECISIONS.md docs/DECISIONS.md ADR.md docs/ADR.md docs/decisions/ docs/adr/ docs/design-docs/decision-log.md docs/design-docs/decisions/ docs/design-docs/adr/ docs/design-docs/adrs/; do
+  add_existing_target decision_targets "$path"
 done
 
 for path in PLANS.md docs/PLANS.md; do
@@ -447,12 +475,19 @@ if has_tag "scorecard-docs" "${changed_doc_areas[@]}"; then
   done
 fi
 
+if has_tag "decision-docs" "${changed_doc_areas[@]}"; then
+  for target in "${decision_targets[@]}"; do
+    add_unique preferred_targets "$target"
+  done
+fi
+
 if [[ "${#preferred_targets[@]}" -eq 0 ]]; then
   for target in \
     "${navigation_targets[@]}" \
     "${current_state_targets[@]}" \
     "${reference_targets[@]}" \
-    "${plan_targets[@]}"; do
+    "${plan_targets[@]}" \
+    "${decision_targets[@]}"; do
     add_unique preferred_targets "$target"
   done
 fi
@@ -650,6 +685,7 @@ echo "preferred_targets=$(to_csv "${preferred_targets[@]}")"
 echo "navigation_targets=$(to_csv "${navigation_targets[@]}")"
 echo "current_state_targets=$(to_csv "${current_state_targets[@]}")"
 echo "reference_targets=$(to_csv "${reference_targets[@]}")"
+echo "decision_targets=$(to_csv "${decision_targets[@]}")"
 echo "plan_targets=$(to_csv "${plan_targets[@]}")"
 echo "scorecard_targets=$(to_csv "${scorecard_targets[@]}")"
 echo "missing_index_targets=$(to_csv "${missing_index_targets[@]}")"
@@ -680,6 +716,7 @@ echo "navigation_files=$(to_csv "${navigation_files[@]}")"
 echo "current_state_doc_files=$(to_csv "${current_state_doc_files[@]}")"
 echo "reference_doc_files=$(to_csv "${reference_doc_files[@]}")"
 echo "generated_doc_files=$(to_csv "${generated_doc_files[@]}")"
+echo "decision_doc_files=$(to_csv "${decision_doc_files[@]}")"
 echo "plan_doc_files=$(to_csv "${plan_doc_files[@]}")"
 echo "history_doc_files=$(to_csv "${history_doc_files[@]}")"
 echo "scorecard_doc_files=$(to_csv "${scorecard_doc_files[@]}")"
