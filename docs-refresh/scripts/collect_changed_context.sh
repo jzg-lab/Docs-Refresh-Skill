@@ -61,6 +61,7 @@ is_current_state_doc_file() {
   [[ "$path" =~ (^|/)docs/core/ ]] \
     || [[ "$path" =~ (^|/)docs/design-docs/ ]] \
     || [[ "$path" =~ (^|/)docs/product-specs/ ]] \
+    || [[ "$path" =~ (^|/)(README)(\.[^.]+)?$ ]] \
     || [[ "$path" =~ (^|/)(ARCHITECTURE|DESIGN|FRONTEND|PRODUCT_SENSE|RELIABILITY|SECURITY)(\.[^.]+)?$ ]]
 }
 
@@ -273,6 +274,14 @@ reference_targets=()
 plan_targets=()
 navigation_targets=()
 scorecard_targets=()
+split_doc_domains=()
+missing_index_targets=()
+
+has_split_domain=0
+has_core_docs_beyond_readme=0
+doc_system_mode=
+mode_reason=
+preferred_mode_doc=
 
 add_existing_target() {
   local array_name="$1"
@@ -294,14 +303,17 @@ if has_file "ARCHITECTURE.md"; then
 fi
 if has_file "docs/core"; then
   layout_tags+=("docs-core")
+  split_doc_domains+=("docs/core")
   current_state_targets+=("docs/core/")
 fi
 if has_file "docs/design-docs"; then
   layout_tags+=("docs-design-docs")
+  split_doc_domains+=("docs/design-docs")
   current_state_targets+=("docs/design-docs/")
 fi
 if has_file "docs/product-specs"; then
   layout_tags+=("docs-product-specs")
+  split_doc_domains+=("docs/product-specs")
   current_state_targets+=("docs/product-specs/")
 fi
 if has_file "docs/design-docs/index.md"; then
@@ -312,6 +324,7 @@ if has_file "docs/product-specs/index.md"; then
 fi
 if has_file "docs/references"; then
   layout_tags+=("docs-references")
+  split_doc_domains+=("docs/references")
   reference_targets+=("docs/references/")
 fi
 if has_file "docs/references/index.md"; then
@@ -319,17 +332,19 @@ if has_file "docs/references/index.md"; then
 fi
 if has_file "docs/generated"; then
   layout_tags+=("docs-generated")
+  split_doc_domains+=("docs/generated")
   reference_targets+=("docs/generated/")
 fi
 if has_file "docs/exec-plans"; then
   layout_tags+=("docs-exec-plans")
+  split_doc_domains+=("docs/exec-plans")
   plan_targets+=("docs/exec-plans/")
 fi
 if has_file "docs/history"; then
   layout_tags+=("docs-history")
 fi
 
-for path in DESIGN.md docs/DESIGN.md FRONTEND.md docs/FRONTEND.md PRODUCT_SENSE.md docs/PRODUCT_SENSE.md RELIABILITY.md docs/RELIABILITY.md SECURITY.md docs/SECURITY.md; do
+for path in README.md DESIGN.md docs/DESIGN.md FRONTEND.md docs/FRONTEND.md PRODUCT_SENSE.md docs/PRODUCT_SENSE.md RELIABILITY.md docs/RELIABILITY.md SECURITY.md docs/SECURITY.md; do
   add_existing_target current_state_targets "$path"
 done
 
@@ -344,6 +359,13 @@ done
 if [[ "${#scorecard_targets[@]}" -gt 0 ]]; then
   layout_tags+=("has-quality-score")
 fi
+
+for path in DESIGN.md docs/DESIGN.md FRONTEND.md docs/FRONTEND.md PRODUCT_SENSE.md docs/PRODUCT_SENSE.md RELIABILITY.md docs/RELIABILITY.md SECURITY.md docs/SECURITY.md PLANS.md docs/PLANS.md QUALITY_SCORE.md docs/QUALITY_SCORE.md; do
+  if has_file "$path"; then
+    has_core_docs_beyond_readme=1
+    break
+  fi
+done
 
 if has_tag "navigation" "${doc_review_triggers[@]}"; then
   for target in "${navigation_targets[@]}"; do
@@ -398,6 +420,38 @@ if [[ "${#preferred_targets[@]}" -eq 0 ]]; then
   done
 fi
 
+if [[ "${#split_doc_domains[@]}" -gt 0 ]]; then
+  has_split_domain=1
+fi
+
+for path in docs/core docs/design-docs docs/product-specs docs/references; do
+  if has_file "$path" && ! has_file "$path/index.md"; then
+    missing_index_targets+=("$path/index.md")
+  fi
+done
+
+if [[ "${#missing_index_targets[@]}" -gt 0 ]]; then
+  doc_system_mode="repair"
+  mode_reason="missing-split-doc-indexes"
+elif [[ "$has_split_domain" -eq 1 ]] && has_tag "navigation" "${doc_review_triggers[@]}"; then
+  doc_system_mode="repair"
+  mode_reason="navigation-drift-in-doc-system"
+elif [[ "$has_split_domain" -eq 1 ]] && [[ "${#preferred_targets[@]}" -eq 0 ]]; then
+  doc_system_mode="repair"
+  mode_reason="doc-system-without-preferred-targets"
+elif [[ "$has_split_domain" -eq 1 ]]; then
+  doc_system_mode="structured"
+  mode_reason="split-doc-domains-present"
+elif has_file "AGENTS.md" || has_file "ARCHITECTURE.md" || [[ "$has_core_docs_beyond_readme" -eq 1 ]]; then
+  doc_system_mode="minimal"
+  mode_reason="core-docs-without-split-domains"
+else
+  doc_system_mode="bootstrap"
+  mode_reason="no-doc-system"
+fi
+
+preferred_mode_doc="modes/$doc_system_mode.md"
+
 if has_tag "only-tests" "${classification[@]}"; then
   doc_refresh_hint="usually-no-doc-update"
 elif has_tag "only-docs" "${classification[@]}"; then
@@ -420,6 +474,11 @@ echo "current_state_targets=$(to_csv "${current_state_targets[@]}")"
 echo "reference_targets=$(to_csv "${reference_targets[@]}")"
 echo "plan_targets=$(to_csv "${plan_targets[@]}")"
 echo "scorecard_targets=$(to_csv "${scorecard_targets[@]}")"
+echo
+echo "[routing]"
+echo "doc_system_mode=$doc_system_mode"
+echo "mode_reason=$mode_reason"
+echo "preferred_mode_doc=$preferred_mode_doc"
 echo
 echo "[classification]"
 echo "classes=$(to_csv "${classification[@]}")"

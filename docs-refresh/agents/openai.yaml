@@ -1,4 +1,4 @@
 interface:
   display_name: "Docs Refresh"
-  short_description: "Refresh authoritative docs from current repository state"
-  default_prompt: "Use the Docs Refresh workflow to treat the repository as the record system, start from AGENTS.md as a map, inspect current workspace state, update the smallest authoritative documents needed, and explain what changed or why no documentation update was needed."
+  short_description: "Refresh authoritative docs through routed workflow modes"
+  default_prompt: "Use the Docs Refresh workflow to treat the repository as the record system, start from AGENTS.md as a map, run the collector, read `doc_system_mode` and `preferred_mode_doc` from the `[routing]` section, load the matching mode file, update the smallest authoritative documents needed, and explain what changed or why no documentation update was needed."
