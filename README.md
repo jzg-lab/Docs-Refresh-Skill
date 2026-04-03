@@ -4,6 +4,44 @@
 
 The core workflow lives in plain Markdown at `docs-refresh/SKILL.md`, so it can be adapted to any agent or prompt system that can reuse structured instructions.
 
+## Installation
+
+This repository currently ships a reusable skill folder, not a published marketplace plugin.
+
+That means people can use it today, but installation is only concrete where this repository provides an adapter or explicit instructions. Right now that means:
+
+- manual installation into a local skills directory
+- ChatGPT/OpenAI skill upload or sharing flows
+- direct reuse of `docs-refresh/SKILL.md` in any agent stack that can consume prompt/skill folders
+
+It does **not** currently ship a Claude marketplace package, Cursor marketplace package, Gemini extension manifest, or Copilot plugin wrapper.
+
+### Codex
+
+Install the `docs-refresh/` folder into Codex's local skills directory:
+
+```bash
+git clone https://github.com/jzg-lab/Docs-Refresh-Skill.git
+mkdir -p "${CODEX_HOME:-$HOME/.codex}/skills"
+cp -R Docs-Refresh-Skill/docs-refresh "${CODEX_HOME:-$HOME/.codex}/skills/"
+```
+
+If you already have an older `docs-refresh` install, replace that folder before copying the new one.
+
+If you want Codex to do the install for you, tell it:
+
+```text
+Fetch and follow instructions from https://raw.githubusercontent.com/jzg-lab/Docs-Refresh-Skill/refs/heads/main/.codex/INSTALL.md
+```
+
+### ChatGPT Skills
+
+Use the Skills UI upload flow for this skill from your computer, then install or share it inside your workspace using your plan's available skills controls.
+
+### Other Agent Stacks
+
+If the host can reuse structured prompt/skill folders, point it at `docs-refresh/SKILL.md` and keep the bundled `docs-refresh/modes/` and `docs-refresh/scripts/` files with it.
+
 ## Portable Use
 
 Use `docs-refresh/SKILL.md` as the canonical workflow instructions in your own agent stack.
@@ -18,7 +56,7 @@ Any platform-specific aliasing, registration, or metadata should be treated as a
 
 This repository also includes an optional OpenAI-compatible adapter under `docs-refresh/agents/openai.yaml`.
 
-If you want to install it into a Codex/OpenAI-compatible skill directory, use the host platform's installer against the `docs-refresh/` path in this repository.
+That file is UI metadata for OpenAI-compatible surfaces. It is not, by itself, a marketplace package or installer.
 
 ## Use
 
@@ -82,6 +120,7 @@ docs/
 
 ## Repository Layout
 
+- `.codex/INSTALL.md`: Codex-specific install instructions
 - `docs-refresh/SKILL.md`: authoritative skill instructions
 - `docs-refresh/modes/`: routed workflow branches selected by the collector
 - `docs-refresh/scripts/collect_changed_context.sh`: diff/context collector
