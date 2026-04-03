@@ -6,16 +6,27 @@ The core workflow lives in plain Markdown at `docs-refresh/SKILL.md`, so it can 
 
 ## Installation
 
-This repository currently ships a reusable skill folder, not a published marketplace plugin.
+This repository currently ships a reusable skill folder, not a host-native plugin package.
 
-That means people can use it today, but installation is only concrete where this repository provides an adapter or explicit instructions. Right now that means:
+That means people can use it today wherever this repository or a published bundle provides a concrete distribution path. Right now that means:
 
 - manual installation into a local skills directory
+- downloading the published ClawHub bundle and unpacking it into a local skills directory
 - manual installation into OpenCode's native global or project-local skills directories
 - ChatGPT/OpenAI skill upload or sharing flows
 - direct reuse of `docs-refresh/SKILL.md` in any agent stack that can consume prompt/skill folders
 
-It does **not** currently ship a Claude marketplace package, Cursor marketplace package, Gemini extension manifest, Copilot plugin wrapper, or OpenCode plugin package.
+It does **not** currently ship a Claude native marketplace package, Cursor marketplace package, Gemini extension manifest, Copilot plugin wrapper, or OpenCode plugin package.
+
+### ClawHub
+
+A packaged bundle is also published on [ClawHub](https://clawhub.ai/jzg-lab/docs-refresh).
+
+Use **Download zip**, then extract the archive into a `docs-refresh/` folder inside your host's local skills directory.
+
+The archive contains the skill contents at the top level (`SKILL.md`, `modes/`, `scripts/`, `agents/`), so create the `docs-refresh/` folder yourself if your host expects named skill directories.
+
+After extraction, use the same target locations documented below for Codex or OpenCode.
 
 ### Codex
 
