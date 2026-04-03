@@ -8,7 +8,14 @@ The repository does not have a real docs system yet. Grow one in phases instead 
 
 - Create or update `README.md` as the living overview when the repository has no better current-state document yet.
 - Create `AGENTS.md` as the map when the repository needs a stable navigation entry point for future agents.
+- Capture the initial founding pack before you grow taxonomy: problem frame, system boundaries, key decisions, and validation notes.
 - Create `ARCHITECTURE.md` only when the codebase already has multiple durable domains, subsystems, or cross-cutting operational behavior that no longer fits cleanly inside `README.md`.
+
+## Founding Pack
+
+- Treat PRD, SRS, architecture notes, and decision records as responsibilities, not mandatory file names.
+- Keep the smallest durable set of docs that answers: what problem the repository solves, what it owns, what it deliberately does not own, what key decisions were made, and how success or safety will be checked.
+- If decision notes or validation notes still fit inside `README.md` or `ARCHITECTURE.md`, keep them there until they earn their own durable page.
 
 ## Placement Rules
 
@@ -27,5 +34,5 @@ The repository does not have a real docs system yet. Grow one in phases instead 
 
 ## Working Rule
 
-- Bootstrap should leave the repository with a minimal map and a living overview, not an empty cathedral of placeholder directories.
+- Bootstrap should leave the repository with a founding pack, not an empty cathedral of placeholder directories.
 - Missing `AGENTS.md` is normal here. It is not, by itself, a repair signal.

@@ -1,6 +1,6 @@
 # Docs Refresh
 
-`docs-refresh` is a portable documentation-refresh workflow packaged in a reusable prompt/skill layout. It treats the repository as the record system, starts from `AGENTS.md` as a map, inspects current workspace state, and uses progressive disclosure to load only the workflow branch that matches the repository's current docs maturity.
+`docs-refresh` is a portable documentation-refresh workflow packaged in a reusable prompt/skill layout. It treats the repository as the record system, starts from `AGENTS.md` as a map, inspects current workspace state, and uses progressive disclosure to load only the workflow branch that matches the repository's current docs maturity and foundation maturity.
 
 The core workflow lives in plain Markdown at `docs-refresh/SKILL.md`, so it can be adapted to any agent or prompt system that can reuse structured instructions.
 
@@ -75,7 +75,7 @@ Use `docs-refresh/SKILL.md` as the canonical workflow instructions in your own a
 
 If shell execution is available, also provide `docs-refresh/scripts/collect_changed_context.sh` so the workflow can gather consistent git context before deciding whether docs need to change.
 
-The workflow is routed. The top-level skill stays short, tries the bundled collector from the skill's own `docs-refresh/scripts/` directory first, reads `doc_system_mode` when available, and then follows the matching mode file under `docs-refresh/modes/`.
+The workflow is routed. The top-level skill stays short, tries the bundled collector from the skill's own `docs-refresh/scripts/` directory first, reads both `doc_system_mode` and `knowledge_phase` when available, and then follows the matching mode file under `docs-refresh/modes/` plus the shared foundation checklist when early-project gaps still exist.
 
 Do not assume the target repository contains its own `scripts/collect_changed_context.sh`.
 
@@ -98,8 +98,9 @@ The workflow will:
 - read repository guidance first
 - try the bundled diff collector first
 - fall back to manual routing if the bundled collector is unavailable
-- read the collector's routing mode before loading detailed instructions when collector output exists
+- read the collector's docs mode and foundation phase before loading detailed instructions when collector output exists
 - inspect only the code, schema, generated artifacts, and docs needed to confirm behavior
+- pressure-test problem frame, system boundaries, decisions, contracts, and validation before inventing more structure
 - update the fewest authoritative docs possible
 - stop after explaining what changed or why no doc update was needed
 
@@ -115,6 +116,15 @@ It will not stage, commit, or clean up git state automatically.
 Missing `AGENTS.md` alone does not imply `repair`. Sparse docs usually mean `bootstrap` or `minimal`, depending on whether the repository already has stable living docs.
 
 New repositories should grow in phases. `docs-refresh` should not generate a full docs tree on first contact unless the repository has already earned those durable domains.
+
+## Foundation Phases
+
+- `framing`: clarify the problem frame, success criteria, and map before adding more structure
+- `design`: make system boundaries, invariants, and key decisions explicit
+- `contracts`: tighten API, schema, generated, or provider-facing reference docs
+- `operations`: close validation, rollout, risk, scorecard, and navigation drift inside the existing doc system
+
+This means the workflow does not treat PRD, SRS, architecture docs, or ADRs as mandatory filenames. It treats them as durable documentation responsibilities that may live in different files depending on repository maturity.
 
 ## Eventual Shape
 
@@ -158,6 +168,7 @@ docs/
 - `.opencode/INSTALL.md`: OpenCode-specific install instructions
 - `docs-refresh/SKILL.md`: authoritative skill instructions
 - `docs-refresh/modes/`: routed workflow branches selected by the collector
+- `docs-refresh/references/`: shared reference artifacts such as the foundation checklist
 - `docs-refresh/scripts/collect_changed_context.sh`: diff/context collector
 - `docs-refresh/scripts/test_collect_changed_context_routing.sh`: shell smoke test for collector routing
 - `docs-refresh/scripts/test_skill_fallback_contract.sh`: shell smoke test for collector fallback and manual routing guidance

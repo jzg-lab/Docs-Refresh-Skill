@@ -5,7 +5,7 @@ description: Refresh authoritative docs through a routed progressive-disclosure 
 
 # Docs Refresh
 
-Use this to close out work by syncing durable docs with the repository's real state. It is not a general writing prompt.
+Use this to close out work by syncing durable docs with the repository's real state. It is not a general writing prompt, and it should not confuse a folder tree with a real project understanding.
 
 Keep the workflow platform-neutral. Host-specific aliases, launcher syntax, and metadata belong in adapters.
 
@@ -14,6 +14,7 @@ Keep the workflow platform-neutral. Host-specific aliases, launcher syntax, and 
 - The repository is the record system. Durable knowledge belongs in versioned docs near the code, not in chat.
 - `AGENTS.md` is a map, not a manual. Keep it short, stable, and navigational.
 - Update the smallest authoritative doc that owns the fact.
+- Treat PRD, SRS, architecture notes, decision logs, contract references, and validation notes as responsibilities, not mandatory filenames.
 - Prefer the bundled collector before manual routing, but do not block on it if it cannot be run from the skill directory.
 - Never run `git add`, `git commit`, or automatic VCS cleanup.
 
@@ -22,9 +23,9 @@ Keep the workflow platform-neutral. Host-specific aliases, launcher syntax, and 
 1. Read repository guidance first. Start with `AGENTS.md` when present, then follow only the pointers needed to find authority, ownership, freshness rules, and doc-lint requirements.
 2. Resolve the directory containing this `SKILL.md`.
 3. If you can run bundled files from the skill directory, run the collector from that skill directory against `[repo-root]`. Do not assume the target repo has its own `scripts/collect_changed_context.sh`.
-4. If the collector succeeds, read its `[routing]` section and open only the matching mode file from `preferred_mode_doc`.
-5. If the collector is unavailable, cannot be resolved from the skill directory, or shell execution is unavailable, manually collect `git status --short`, staged and unstaged changed files, untracked files, diff stat, and the repository docs layout.
-6. Use the manual routing fallback below to choose exactly one mode file.
+4. If the collector succeeds, read both `[routing]` and `[knowledge]`, open only the matching mode file from `preferred_mode_doc`, and load [references/foundation-checklist.md](references/foundation-checklist.md) when `knowledge_phase` is not `operations` or `foundation_gaps` is non-empty.
+5. If the collector is unavailable, cannot be resolved from the skill directory, or shell execution is unavailable, manually collect `git status --short`, staged and unstaged changed files, untracked files, diff stat, the repository docs layout, and any obvious foundation surfaces such as overview, architecture, decision, reference, and validation docs.
+6. Use the manual routing fallback below to choose exactly one mode file, then infer the matching foundation phase with the checklist reference.
 7. Use the current workspace state as the source of truth: staged diff, unstaged diff, untracked files, and generated artifacts when the repository treats them as authoritative outputs.
 8. Inspect only the code, schema, generated artifacts, and current docs needed to confirm the real behavior change.
 9. Stop after explaining what changed or why no doc change was needed.
@@ -41,11 +42,23 @@ Use this only when the bundled collector cannot be run from the skill directory 
 - Sparse docs alone do not mean `repair`.
 - When in doubt between `minimal` and `repair`, choose `minimal` unless the repository already has a real docs system whose map is broken.
 
+## Foundation Axis
+
+After you choose a mode, use the collector's `knowledge_phase` when available. If you are in fallback mode, infer the phase manually.
+
+- `framing`: the repository still needs a durable problem frame, success criteria, or map before deeper doc taxonomy is useful.
+- `design`: the overview exists, but system boundaries, invariants, or important decisions are still implicit.
+- `contracts`: the repository's APIs, schemas, generated interfaces, or external contracts are evolving faster than its reference docs.
+- `operations`: the core frame and design exist; remaining gaps are validation, rollout notes, reliability, security, quality scorecards, or stale navigation.
+- Before creating new folders, close the highest-risk gap among problem frame, system boundaries, decision log, contract docs, and validation plan.
+- Use [references/foundation-checklist.md](references/foundation-checklist.md) to pressure-test those gaps and decide whether the answer belongs in an existing doc, a new section, or a newly earned subtree.
+
 ## Shared Decision Rules
 
 - Usually no documentation edits for tests-only, docs-only, comments-only, formatting-only, or internal refactors that do not change public behavior, architecture, state semantics, runtime operation, or external contracts.
 - Force a documentation review when the change touches APIs, schema, CLI flags, run modes, scheduler behavior, trigger flow, core architecture, state model, external contracts, durable entry points, documented core beliefs, or stale navigation.
 - If the signal is ambiguous, inspect the diff before deciding. Do not update docs just because code changed.
+- In `bootstrap` and `minimal` repos, strengthen the founding pack before expanding taxonomy. A new docs subtree is the last move, not the first.
 
 ## Shared Authority Rules
 

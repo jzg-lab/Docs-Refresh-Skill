@@ -18,5 +18,6 @@ The repository has a docs system, but its navigation or authority surfaces are s
 ## Working Rule
 
 - Do not patch around a broken map by stuffing more truth into leaf pages. Repair navigation and authority first, then continue with normal convergence.
+- After the map is usable again, close the highest-risk foundation gap instead of inventing new placeholder structure.
 - Missing `AGENTS.md` alone is not `repair`.
 - Sparse docs alone are not `repair`.

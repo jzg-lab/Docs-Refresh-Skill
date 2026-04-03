@@ -9,6 +9,8 @@ The repository already has core living docs, but it has not yet split into a dur
 - Prefer updating the existing living docs first: `README.md`, `AGENTS.md`, `ARCHITECTURE.md`, and cross-cutting top-level docs such as `DESIGN.md`, `FRONTEND.md`, `PRODUCT_SENSE.md`, `RELIABILITY.md`, `SECURITY.md`, `PLANS.md`, or `QUALITY_SCORE.md`.
 - Keep `AGENTS.md` small and navigational.
 - Use `ARCHITECTURE.md` or another current-state doc for durable system truth that no longer belongs in the overview.
+- Strengthen the founding pack before creating the first subtree.
+- Fill gaps in problem frame, system boundaries, key decisions, contract notes, and validation notes in the existing docs before you create new folders.
 
 ## Creation Rules
 

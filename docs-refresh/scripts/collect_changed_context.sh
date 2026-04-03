@@ -36,6 +36,16 @@ has_file() {
   [[ -e "$repo_root/$path" ]]
 }
 
+has_any_file() {
+  local path
+  for path in "$@"; do
+    if has_file "$path"; then
+      return 0
+    fi
+  done
+  return 1
+}
+
 is_doc_file() {
   local path="$1"
   [[ "$path" =~ (^|/)(docs|doc)/ ]] \
@@ -62,7 +72,7 @@ is_current_state_doc_file() {
     || [[ "$path" =~ (^|/)docs/design-docs/ ]] \
     || [[ "$path" =~ (^|/)docs/product-specs/ ]] \
     || [[ "$path" =~ (^|/)(README)(\.[^.]+)?$ ]] \
-    || [[ "$path" =~ (^|/)(ARCHITECTURE|DESIGN|FRONTEND|PRODUCT_SENSE|RELIABILITY|SECURITY)(\.[^.]+)?$ ]]
+    || [[ "$path" =~ (^|/)(PROJECT_BRIEF|ARCHITECTURE|DESIGN|FRONTEND|PRODUCT_SENSE|DECISIONS|RELIABILITY|SECURITY)(\.[^.]+)?$ ]]
 }
 
 is_scorecard_file() {
@@ -344,7 +354,7 @@ if has_file "docs/history"; then
   layout_tags+=("docs-history")
 fi
 
-for path in README.md DESIGN.md docs/DESIGN.md FRONTEND.md docs/FRONTEND.md PRODUCT_SENSE.md docs/PRODUCT_SENSE.md RELIABILITY.md docs/RELIABILITY.md SECURITY.md docs/SECURITY.md; do
+for path in README.md PROJECT_BRIEF.md docs/PROJECT_BRIEF.md DESIGN.md docs/DESIGN.md FRONTEND.md docs/FRONTEND.md PRODUCT_SENSE.md docs/PRODUCT_SENSE.md DECISIONS.md docs/DECISIONS.md RELIABILITY.md docs/RELIABILITY.md SECURITY.md docs/SECURITY.md; do
   add_existing_target current_state_targets "$path"
 done
 
@@ -360,7 +370,7 @@ if [[ "${#scorecard_targets[@]}" -gt 0 ]]; then
   layout_tags+=("has-quality-score")
 fi
 
-for path in DESIGN.md docs/DESIGN.md FRONTEND.md docs/FRONTEND.md PRODUCT_SENSE.md docs/PRODUCT_SENSE.md RELIABILITY.md docs/RELIABILITY.md SECURITY.md docs/SECURITY.md PLANS.md docs/PLANS.md QUALITY_SCORE.md docs/QUALITY_SCORE.md; do
+for path in PROJECT_BRIEF.md docs/PROJECT_BRIEF.md DESIGN.md docs/DESIGN.md FRONTEND.md docs/FRONTEND.md PRODUCT_SENSE.md docs/PRODUCT_SENSE.md DECISIONS.md docs/DECISIONS.md RELIABILITY.md docs/RELIABILITY.md SECURITY.md docs/SECURITY.md PLANS.md docs/PLANS.md QUALITY_SCORE.md docs/QUALITY_SCORE.md RISKS.md docs/RISKS.md OPEN_QUESTIONS.md docs/OPEN_QUESTIONS.md ASSUMPTIONS.md docs/ASSUMPTIONS.md API.md docs/API.md SCHEMA.md docs/SCHEMA.md; do
   if has_file "$path"; then
     has_core_docs_beyond_readme=1
     break
@@ -452,6 +462,144 @@ fi
 
 preferred_mode_doc="modes/$doc_system_mode.md"
 
+knowledge_phase=
+problem_frame_state=
+boundary_state=
+decision_state=
+contract_state=
+validation_state=
+foundation_gaps=()
+
+if has_any_file \
+  "README.md" \
+  "PROJECT_BRIEF.md" \
+  "docs/PROJECT_BRIEF.md" \
+  "PRODUCT_SENSE.md" \
+  "docs/PRODUCT_SENSE.md" \
+  "docs/product-specs" \
+  "docs/product-specs/index.md"; then
+  problem_frame_state="present"
+else
+  problem_frame_state="missing"
+fi
+
+if has_any_file \
+  "ARCHITECTURE.md" \
+  "DESIGN.md" \
+  "docs/DESIGN.md" \
+  "FRONTEND.md" \
+  "docs/FRONTEND.md" \
+  "docs/core" \
+  "docs/design-docs"; then
+  boundary_state="present"
+else
+  boundary_state="missing"
+fi
+
+decision_pressure=0
+if [[ "${#high_risk_files[@]}" -gt 0 ]] \
+  || has_tag "architecture" "${doc_review_triggers[@]}" \
+  || has_tag "application" "${changed_domains[@]}" \
+  || has_tag "runtime" "${changed_domains[@]}" \
+  || has_tag "plans" "${changed_domains[@]}"; then
+  decision_pressure=1
+fi
+
+if has_any_file \
+  "DECISIONS.md" \
+  "docs/DECISIONS.md" \
+  "ADR.md" \
+  "docs/ADR.md" \
+  "docs/decisions" \
+  "docs/adr" \
+  "docs/design-docs/decision-log.md" \
+  "docs/design-docs/decisions" \
+  "docs/design-docs/adr" \
+  "docs/design-docs/adrs"; then
+  decision_state="present"
+elif [[ "$decision_pressure" -eq 1 ]]; then
+  decision_state="missing"
+else
+  decision_state="not-needed-yet"
+fi
+
+contract_pressure=0
+if has_tag "external-contracts" "${doc_review_triggers[@]}" \
+  || has_tag "state-model" "${doc_review_triggers[@]}" \
+  || has_tag "generated-artifacts" "${doc_review_triggers[@]}" \
+  || has_tag "api" "${changed_domains[@]}"; then
+  contract_pressure=1
+fi
+
+if has_any_file \
+  "docs/references" \
+  "docs/generated" \
+  "API.md" \
+  "docs/API.md" \
+  "SCHEMA.md" \
+  "docs/SCHEMA.md" \
+  "openapi.yaml" \
+  "openapi.yml" \
+  "openapi.json"; then
+  contract_state="present"
+elif [[ "$contract_pressure" -eq 1 ]]; then
+  contract_state="missing"
+else
+  contract_state="not-needed-yet"
+fi
+
+if has_any_file \
+  "PLANS.md" \
+  "docs/PLANS.md" \
+  "QUALITY_SCORE.md" \
+  "docs/QUALITY_SCORE.md" \
+  "RELIABILITY.md" \
+  "docs/RELIABILITY.md" \
+  "SECURITY.md" \
+  "docs/SECURITY.md" \
+  "RISKS.md" \
+  "docs/RISKS.md" \
+  "OPEN_QUESTIONS.md" \
+  "docs/OPEN_QUESTIONS.md" \
+  "ASSUMPTIONS.md" \
+  "docs/ASSUMPTIONS.md" \
+  "docs/exec-plans"; then
+  validation_state="present"
+else
+  validation_state="missing"
+fi
+
+if [[ "$problem_frame_state" == "missing" ]]; then
+  foundation_gaps+=("problem-frame")
+fi
+
+if [[ "$boundary_state" == "missing" ]]; then
+  foundation_gaps+=("system-boundaries")
+fi
+
+if [[ "$decision_state" == "missing" ]]; then
+  foundation_gaps+=("decision-log")
+fi
+
+if [[ "$contract_state" == "missing" ]]; then
+  foundation_gaps+=("contract-docs")
+fi
+
+if [[ "$validation_state" == "missing" ]]; then
+  foundation_gaps+=("validation-plan")
+fi
+
+if [[ "$doc_system_mode" == "bootstrap" ]] \
+  || { [[ "$doc_system_mode" == "minimal" ]] && [[ "$problem_frame_state" == "missing" ]]; }; then
+  knowledge_phase="framing"
+elif [[ "$boundary_state" == "missing" ]] || [[ "$decision_state" == "missing" ]]; then
+  knowledge_phase="design"
+elif [[ "$contract_state" == "missing" ]]; then
+  knowledge_phase="contracts"
+else
+  knowledge_phase="operations"
+fi
+
 if has_tag "only-tests" "${classification[@]}"; then
   doc_refresh_hint="usually-no-doc-update"
 elif has_tag "only-docs" "${classification[@]}"; then
@@ -479,6 +627,15 @@ echo "[routing]"
 echo "doc_system_mode=$doc_system_mode"
 echo "mode_reason=$mode_reason"
 echo "preferred_mode_doc=$preferred_mode_doc"
+echo
+echo "[knowledge]"
+echo "knowledge_phase=$knowledge_phase"
+echo "problem_frame_state=$problem_frame_state"
+echo "boundary_state=$boundary_state"
+echo "decision_state=$decision_state"
+echo "contract_state=$contract_state"
+echo "validation_state=$validation_state"
+echo "foundation_gaps=$(to_csv "${foundation_gaps[@]}")"
 echo
 echo "[classification]"
 echo "classes=$(to_csv "${classification[@]}")"
