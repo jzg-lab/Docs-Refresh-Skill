@@ -1,6 +1,6 @@
 # Minimal Mode
 
-Use this mode when the collector reports `doc_system_mode=minimal`.
+Use this mode when the collector reports `doc_system_mode=minimal`, or when manual routing shows there is no split docs tree but the repository already has stable living docs.
 
 The repository already has core living docs, but it has not yet split into a durable docs taxonomy.
 
@@ -23,3 +23,4 @@ The repository already has core living docs, but it has not yet split into a dur
 ## Working Rule
 
 - A minimal repo should converge by strengthening its existing docs, not by exploding into a premature taxonomy.
+- A repo can be `minimal` even if `AGENTS.md` is absent, as long as other durable current-state docs already exist.

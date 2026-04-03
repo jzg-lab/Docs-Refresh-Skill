@@ -75,7 +75,11 @@ Use `docs-refresh/SKILL.md` as the canonical workflow instructions in your own a
 
 If shell execution is available, also provide `docs-refresh/scripts/collect_changed_context.sh` so the workflow can gather consistent git context before deciding whether docs need to change.
 
-The workflow is routed. The top-level skill stays short, runs the collector first, reads `doc_system_mode`, and then follows the matching mode file under `docs-refresh/modes/`.
+The workflow is routed. The top-level skill stays short, tries the bundled collector from the skill's own `docs-refresh/scripts/` directory first, reads `doc_system_mode` when available, and then follows the matching mode file under `docs-refresh/modes/`.
+
+Do not assume the target repository contains its own `scripts/collect_changed_context.sh`.
+
+If the bundled collector cannot be resolved or executed, the skill falls back to manual routing by inspecting git state and the repository's docs layout.
 
 Any platform-specific aliasing, registration, or metadata should be treated as an adapter layer around the core workflow, not as part of the workflow contract itself.
 
@@ -92,8 +96,9 @@ Invoke the workflow however your host platform exposes reusable prompts or skill
 The workflow will:
 
 - read repository guidance first
-- run a stable diff collector
-- read the collector's routing mode before loading detailed instructions
+- try the bundled diff collector first
+- fall back to manual routing if the bundled collector is unavailable
+- read the collector's routing mode before loading detailed instructions when collector output exists
 - inspect only the code, schema, generated artifacts, and docs needed to confirm behavior
 - update the fewest authoritative docs possible
 - stop after explaining what changed or why no doc update was needed
@@ -106,6 +111,8 @@ It will not stage, commit, or clean up git state automatically.
 - `minimal`: repos with core docs such as `AGENTS.md`, `ARCHITECTURE.md`, or cross-cutting top-level docs, but no split docs tree yet
 - `structured`: repos that already have split doc domains and should preserve that taxonomy
 - `repair`: repos whose docs system exists but whose navigation or authority surfaces are stale enough to fix first
+
+Missing `AGENTS.md` alone does not imply `repair`. Sparse docs usually mean `bootstrap` or `minimal`, depending on whether the repository already has stable living docs.
 
 New repositories should grow in phases. `docs-refresh` should not generate a full docs tree on first contact unless the repository has already earned those durable domains.
 
@@ -153,5 +160,6 @@ docs/
 - `docs-refresh/modes/`: routed workflow branches selected by the collector
 - `docs-refresh/scripts/collect_changed_context.sh`: diff/context collector
 - `docs-refresh/scripts/test_collect_changed_context_routing.sh`: shell smoke test for collector routing
+- `docs-refresh/scripts/test_skill_fallback_contract.sh`: shell smoke test for collector fallback and manual routing guidance
 - `docs-refresh/agents/openai.yaml`: optional adapter metadata for OpenAI-compatible surfaces
 - `AGENTS.md`: repository navigation for agents

@@ -1,6 +1,6 @@
 # Structured Mode
 
-Use this mode when the collector reports `doc_system_mode=structured`.
+Use this mode when the collector reports `doc_system_mode=structured`, or when manual routing finds split docs domains already present.
 
 The repository already has split docs domains. Preserve that system and converge to the smallest authoritative page that owns the fact.
 

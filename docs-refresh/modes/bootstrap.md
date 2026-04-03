@@ -1,6 +1,6 @@
 # Bootstrap Mode
 
-Use this mode when the collector reports `doc_system_mode=bootstrap`.
+Use this mode when the collector reports `doc_system_mode=bootstrap`, or when manual routing shows there is no split docs tree and no stable docs system beyond `README.md` or a few incidental docs.
 
 The repository does not have a real docs system yet. Grow one in phases instead of generating a full scaffold on first contact.
 
@@ -28,3 +28,4 @@ The repository does not have a real docs system yet. Grow one in phases instead 
 ## Working Rule
 
 - Bootstrap should leave the repository with a minimal map and a living overview, not an empty cathedral of placeholder directories.
+- Missing `AGENTS.md` is normal here. It is not, by itself, a repair signal.

@@ -1,6 +1,6 @@
 # Repair Mode
 
-Use this mode when the collector reports `doc_system_mode=repair`.
+Use this mode when the collector reports `doc_system_mode=repair`, or when manual routing shows that an existing docs system has a broken map or authority surface.
 
 The repository has a docs system, but its navigation or authority surfaces are stale enough that content edits alone would deepen drift.
 
@@ -18,3 +18,5 @@ The repository has a docs system, but its navigation or authority surfaces are s
 ## Working Rule
 
 - Do not patch around a broken map by stuffing more truth into leaf pages. Repair navigation and authority first, then continue with normal convergence.
+- Missing `AGENTS.md` alone is not `repair`.
+- Sparse docs alone are not `repair`.
