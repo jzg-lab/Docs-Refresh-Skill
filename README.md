@@ -32,7 +32,7 @@ If you already have an older `docs-refresh` install, replace that folder before 
 If you want Codex to do the install for you, tell it:
 
 ```text
-Fetch and follow instructions from https://raw.githubusercontent.com/jzg-lab/Docs-Refresh-Skill/refs/heads/main/.codex/INSTALL.md
+Fetch and follow instructions from https://raw.githubusercontent.com/jzg-lab/Docs-Refresh-Skill/main/.codex/INSTALL.md
 ```
 
 ### OpenCode
@@ -58,7 +58,7 @@ cp -R Docs-Refresh-Skill/docs-refresh .opencode/skills/
 If you want OpenCode to do the install for you, tell it:
 
 ```text
-Fetch and follow instructions from https://raw.githubusercontent.com/jzg-lab/Docs-Refresh-Skill/refs/heads/main/.opencode/INSTALL.md
+Fetch and follow instructions from https://raw.githubusercontent.com/jzg-lab/Docs-Refresh-Skill/main/.opencode/INSTALL.md
 ```
 
 ### ChatGPT Skills
