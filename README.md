@@ -1,6 +1,6 @@
 # Docs Refresh
 
-`docs-refresh` is a portable documentation-refresh workflow packaged in a reusable prompt/skill layout. It treats the repository as the record system, starts from `AGENTS.md` as a map, inspects current git state, and updates only the smallest authoritative docs that need to change.
+`docs-refresh` is a portable documentation-refresh workflow packaged in a reusable prompt/skill layout. It treats the repository as the record system, starts from `AGENTS.md` as a map, inspects current workspace state, and updates only the smallest authoritative docs that need to change.
 
 The core workflow lives in plain Markdown at `docs-refresh/SKILL.md`, so it can be adapted to any agent or prompt system that can reuse structured instructions.
 
@@ -26,7 +26,7 @@ The workflow will:
 
 - read repository guidance first
 - run a stable diff collector
-- inspect only the code and docs needed to confirm behavior
+- inspect only the code, schema, generated artifacts, and docs needed to confirm behavior
 - update the fewest authoritative docs possible
 - stop after explaining what changed or why no doc update was needed
 
