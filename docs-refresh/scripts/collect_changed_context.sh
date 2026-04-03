@@ -311,6 +311,7 @@ preferred_targets=()
 current_state_targets=()
 reference_targets=()
 decision_targets=()
+repair_targets=()
 plan_targets=()
 navigation_targets=()
 scorecard_targets=()
@@ -525,6 +526,16 @@ else
   mode_reason="no-doc-system"
 fi
 
+for target in "${missing_index_targets[@]}" "${missing_plan_scaffold_targets[@]}"; do
+  [[ -n "$target" ]] || continue
+  add_unique repair_targets "$target"
+done
+
+if [[ "$doc_system_mode" == "repair" ]]; then
+  add_unique doc_review_triggers "navigation"
+  add_unique classification "repair"
+fi
+
 preferred_mode_doc="modes/$doc_system_mode.md"
 
 knowledge_phase=
@@ -665,7 +676,9 @@ else
   knowledge_phase="operations"
 fi
 
-if has_tag "only-tests" "${classification[@]}"; then
+if [[ "$doc_system_mode" == "repair" ]]; then
+  doc_refresh_hint="repair-map-before-content"
+elif has_tag "only-tests" "${classification[@]}"; then
   doc_refresh_hint="usually-no-doc-update"
 elif has_tag "only-docs" "${classification[@]}"; then
   doc_refresh_hint="docs-already-touched"
@@ -686,6 +699,7 @@ echo "navigation_targets=$(to_csv "${navigation_targets[@]}")"
 echo "current_state_targets=$(to_csv "${current_state_targets[@]}")"
 echo "reference_targets=$(to_csv "${reference_targets[@]}")"
 echo "decision_targets=$(to_csv "${decision_targets[@]}")"
+echo "repair_targets=$(to_csv "${repair_targets[@]}")"
 echo "plan_targets=$(to_csv "${plan_targets[@]}")"
 echo "scorecard_targets=$(to_csv "${scorecard_targets[@]}")"
 echo "missing_index_targets=$(to_csv "${missing_index_targets[@]}")"
