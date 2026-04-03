@@ -59,6 +59,8 @@ After you choose a mode, use the collector's `knowledge_phase` when available. I
 - Force a documentation review when the change touches APIs, schema, CLI flags, run modes, scheduler behavior, trigger flow, core architecture, state model, external contracts, durable entry points, documented core beliefs, or stale navigation.
 - If the signal is ambiguous, inspect the diff before deciding. Do not update docs just because code changed.
 - In `bootstrap` and `minimal` repos, strengthen the founding pack before expanding taxonomy. A new docs subtree is the last move, not the first.
+- When a repository has earned `docs/exec-plans/` as a durable plan domain, keep that subtree navigable. The default scaffold is `docs/exec-plans/index.md`, `docs/exec-plans/active/`, and `docs/exec-plans/completed/`.
+- When the default `docs/exec-plans/` scaffold is missing and you can run bundled files from the skill directory, use [scripts/scaffold_exec_plans.sh](scripts/scaffold_exec_plans.sh) against `[repo-root]`. It creates the scaffold without overwriting existing plan docs and keeps empty lifecycle buckets versioned with placeholder files.
 
 ## Shared Authority Rules
 

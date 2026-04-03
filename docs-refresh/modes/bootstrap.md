@@ -30,7 +30,7 @@ The repository does not have a real docs system yet. Grow one in phases instead 
 - Create `docs/product-specs/` when user-facing flows or product constraints have split beyond overview docs.
 - Create `docs/references/` when schemas, provider contracts, protocol details, or LLM-oriented references need their own reference pages.
 - Create `docs/generated/` only when generated facts are treated as authoritative repository outputs.
-- Create `docs/exec-plans/` when plans, progress logs, or debt tracking are versioned as first-class artifacts.
+- Create `docs/exec-plans/` when plans, progress logs, or debt tracking are versioned as first-class artifacts. When you do, scaffold `docs/exec-plans/index.md`, `docs/exec-plans/active/`, and `docs/exec-plans/completed/` so execution work has a stable entry point and lifecycle buckets, and keep empty buckets versioned with placeholder files until real plan docs exist.
 
 ## Working Rule
 

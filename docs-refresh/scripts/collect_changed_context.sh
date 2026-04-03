@@ -46,6 +46,12 @@ has_any_file() {
   return 1
 }
 
+dir_has_entries() {
+  local path="$1"
+  [[ -d "$repo_root/$path" ]] || return 1
+  find "$repo_root/$path" -mindepth 1 -maxdepth 1 -print -quit | grep -q .
+}
+
 is_doc_file() {
   local path="$1"
   [[ "$path" =~ (^|/)(docs|doc)/ ]] \
@@ -286,6 +292,7 @@ navigation_targets=()
 scorecard_targets=()
 split_doc_domains=()
 missing_index_targets=()
+missing_plan_scaffold_targets=()
 
 has_split_domain=0
 has_core_docs_beyond_readme=0
@@ -349,6 +356,26 @@ if has_file "docs/exec-plans"; then
   layout_tags+=("docs-exec-plans")
   split_doc_domains+=("docs/exec-plans")
   plan_targets+=("docs/exec-plans/")
+  if has_file "docs/exec-plans/index.md"; then
+    navigation_targets+=("docs/exec-plans/index.md")
+    plan_targets+=("docs/exec-plans/index.md")
+  fi
+  if has_file "docs/exec-plans/active"; then
+    plan_targets+=("docs/exec-plans/active/")
+    if ! dir_has_entries "docs/exec-plans/active"; then
+      missing_plan_scaffold_targets+=("docs/exec-plans/active/.gitkeep")
+    fi
+  else
+    missing_plan_scaffold_targets+=("docs/exec-plans/active/")
+  fi
+  if has_file "docs/exec-plans/completed"; then
+    plan_targets+=("docs/exec-plans/completed/")
+    if ! dir_has_entries "docs/exec-plans/completed"; then
+      missing_plan_scaffold_targets+=("docs/exec-plans/completed/.gitkeep")
+    fi
+  else
+    missing_plan_scaffold_targets+=("docs/exec-plans/completed/")
+  fi
 fi
 if has_file "docs/history"; then
   layout_tags+=("docs-history")
@@ -434,7 +461,7 @@ if [[ "${#split_doc_domains[@]}" -gt 0 ]]; then
   has_split_domain=1
 fi
 
-for path in docs/core docs/design-docs docs/product-specs docs/references; do
+for path in docs/core docs/design-docs docs/product-specs docs/references docs/exec-plans; do
   if has_file "$path" && ! has_file "$path/index.md"; then
     missing_index_targets+=("$path/index.md")
   fi
@@ -443,6 +470,9 @@ done
 if [[ "${#missing_index_targets[@]}" -gt 0 ]]; then
   doc_system_mode="repair"
   mode_reason="missing-split-doc-indexes"
+elif [[ "${#missing_plan_scaffold_targets[@]}" -gt 0 ]]; then
+  doc_system_mode="repair"
+  mode_reason="incomplete-exec-plan-scaffold"
 elif [[ "$has_split_domain" -eq 1 ]] && has_tag "navigation" "${doc_review_triggers[@]}"; then
   doc_system_mode="repair"
   mode_reason="navigation-drift-in-doc-system"
@@ -622,6 +652,8 @@ echo "current_state_targets=$(to_csv "${current_state_targets[@]}")"
 echo "reference_targets=$(to_csv "${reference_targets[@]}")"
 echo "plan_targets=$(to_csv "${plan_targets[@]}")"
 echo "scorecard_targets=$(to_csv "${scorecard_targets[@]}")"
+echo "missing_index_targets=$(to_csv "${missing_index_targets[@]}")"
+echo "missing_plan_scaffold_targets=$(to_csv "${missing_plan_scaffold_targets[@]}")"
 echo
 echo "[routing]"
 echo "doc_system_mode=$doc_system_mode"

@@ -117,6 +117,8 @@ Missing `AGENTS.md` alone does not imply `repair`. Sparse docs usually mean `boo
 
 New repositories should grow in phases. `docs-refresh` should not generate a full docs tree on first contact unless the repository has already earned those durable domains.
 
+When a repository has earned `docs/exec-plans/` as a first-class documentation domain, the default scaffold is `docs/exec-plans/index.md`, `docs/exec-plans/active/`, and `docs/exec-plans/completed/`. Keep empty lifecycle buckets versioned with placeholder files such as `.gitkeep`, and add additional plan artifacts such as debt trackers only when they carry durable repository truth.
+
 ## Foundation Phases
 
 - `framing`: clarify the problem frame, success criteria, and map before adding more structure
@@ -139,6 +141,7 @@ docs/
 │   ├── core-beliefs.md
 │   └── ...
 ├── exec-plans/
+│   ├── index.md
 │   ├── active/
 │   ├── completed/
 │   └── tech-debt-tracker.md
@@ -170,7 +173,9 @@ docs/
 - `docs-refresh/modes/`: routed workflow branches selected by the collector
 - `docs-refresh/references/`: shared reference artifacts such as the foundation checklist
 - `docs-refresh/scripts/collect_changed_context.sh`: diff/context collector
+- `docs-refresh/scripts/scaffold_exec_plans.sh`: bundled helper that creates the default `docs/exec-plans/` scaffold without overwriting existing plan docs
 - `docs-refresh/scripts/test_collect_changed_context_routing.sh`: shell smoke test for collector routing
+- `docs-refresh/scripts/test_scaffold_exec_plans.sh`: shell smoke test for the exec-plans scaffold helper
 - `docs-refresh/scripts/test_skill_fallback_contract.sh`: shell smoke test for collector fallback and manual routing guidance
 - `docs-refresh/agents/openai.yaml`: optional adapter metadata for OpenAI-compatible surfaces
 - `AGENTS.md`: repository navigation for agents

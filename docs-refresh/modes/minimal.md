@@ -20,7 +20,7 @@ The repository already has core living docs, but it has not yet split into a dur
   - `docs/product-specs/` for product behavior and user-facing constraints
   - `docs/references/` for schemas, contracts, and protocol detail
   - `docs/generated/` for authoritative generated facts
-  - `docs/exec-plans/` for versioned plans and debt tracking
+  - `docs/exec-plans/` for versioned plans and debt tracking; when you create this subtree, scaffold `index.md`, `active/`, and `completed/`, and keep empty buckets versioned with placeholder files
 
 ## Working Rule
 
