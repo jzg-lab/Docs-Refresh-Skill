@@ -11,10 +11,11 @@ This repository currently ships a reusable skill folder, not a published marketp
 That means people can use it today, but installation is only concrete where this repository provides an adapter or explicit instructions. Right now that means:
 
 - manual installation into a local skills directory
+- manual installation into OpenCode's native global or project-local skills directories
 - ChatGPT/OpenAI skill upload or sharing flows
 - direct reuse of `docs-refresh/SKILL.md` in any agent stack that can consume prompt/skill folders
 
-It does **not** currently ship a Claude marketplace package, Cursor marketplace package, Gemini extension manifest, or Copilot plugin wrapper.
+It does **not** currently ship a Claude marketplace package, Cursor marketplace package, Gemini extension manifest, Copilot plugin wrapper, or OpenCode plugin package.
 
 ### Codex
 
@@ -32,6 +33,32 @@ If you want Codex to do the install for you, tell it:
 
 ```text
 Fetch and follow instructions from https://raw.githubusercontent.com/jzg-lab/Docs-Refresh-Skill/refs/heads/main/.codex/INSTALL.md
+```
+
+### OpenCode
+
+Install `docs-refresh/` into one of OpenCode's native skill locations.
+
+Global install:
+
+```bash
+git clone https://github.com/jzg-lab/Docs-Refresh-Skill.git
+mkdir -p ~/.config/opencode/skills
+cp -R Docs-Refresh-Skill/docs-refresh ~/.config/opencode/skills/
+```
+
+Project-local install:
+
+```bash
+git clone https://github.com/jzg-lab/Docs-Refresh-Skill.git
+mkdir -p .opencode/skills
+cp -R Docs-Refresh-Skill/docs-refresh .opencode/skills/
+```
+
+If you want OpenCode to do the install for you, tell it:
+
+```text
+Fetch and follow instructions from https://raw.githubusercontent.com/jzg-lab/Docs-Refresh-Skill/refs/heads/main/.opencode/INSTALL.md
 ```
 
 ### ChatGPT Skills
@@ -121,6 +148,7 @@ docs/
 ## Repository Layout
 
 - `.codex/INSTALL.md`: Codex-specific install instructions
+- `.opencode/INSTALL.md`: OpenCode-specific install instructions
 - `docs-refresh/SKILL.md`: authoritative skill instructions
 - `docs-refresh/modes/`: routed workflow branches selected by the collector
 - `docs-refresh/scripts/collect_changed_context.sh`: diff/context collector

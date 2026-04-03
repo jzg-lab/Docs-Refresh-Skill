@@ -10,10 +10,12 @@ This repository publishes the `docs-refresh` documentation-refresh workflow in a
 4. `docs-refresh/agents/openai.yaml` is optional adapter metadata for OpenAI-compatible surfaces and should stay aligned with the workflow name and short description.
 5. `README.md` is the human-facing overview and install pointer.
 6. `.codex/INSTALL.md` is the human-facing Codex install entry point and should stay aligned with the repository layout and skill folder name.
+7. `.opencode/INSTALL.md` is the human-facing OpenCode install entry point and should stay aligned with the repository layout and skill folder name.
 
 ## Map
 
 - `.codex/` holds Codex-specific install instructions.
+- `.opencode/` holds OpenCode-specific install instructions.
 - `docs-refresh/` bundles the installable skill directory.
 - `docs-refresh/modes/` holds the routed workflow branches loaded after the collector decides repository mode.
 - `docs-refresh/scripts/` holds helper scripts referenced by the skill.
@@ -24,6 +26,7 @@ This repository publishes the `docs-refresh` documentation-refresh workflow in a
 - Update `docs-refresh/SKILL.md` and the relevant file under `docs-refresh/modes/` together when routed behavior changes.
 - Update `docs-refresh/agents/openai.yaml` whenever the skill name or short description changes.
 - Update `.codex/INSTALL.md` whenever the repository URL, default branch, skill folder name, or recommended Codex install path changes.
+- Update `.opencode/INSTALL.md` whenever the repository URL, default branch, skill folder name, or recommended OpenCode install paths change.
 - Keep `docs-refresh/scripts/collect_changed_context.sh` aligned with the mode names and routing rules documented in `docs-refresh/SKILL.md`.
 - Keep the core workflow platform-neutral. Host-specific aliases and metadata belong in adapter files, not in the core workflow.
 - Add new bundled resources under `docs-refresh/` and link them from `docs-refresh/SKILL.md` before adding more root-level docs.
