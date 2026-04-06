@@ -12,6 +12,7 @@ The repository already has split docs domains. Preserve that system and converge
 - Put schemas, provider contracts, generated facts, and protocol details in reference docs.
 - Keep plans and debt in plan artifacts, but do not hide current system truth there.
 - Keep `docs/exec-plans/` navigable: `index.md` is the entry point, `active/` plus `completed/` are the default lifecycle buckets unless the repository already defines a stricter convention, and empty buckets should stay versioned with placeholder files.
+- Lifecycle consistency check: when `docs/exec-plans/` has `active/` and `completed/` buckets, verify that every plan file whose content or index entry marks it as done is physically in `completed/`, and that no done-marked plan remains in the root or `active/`. This is a structural audit, not a diff-driven check. Run this check even when git shows no changes.
 - Leave history docs as history except for redirects or explicit staleness notices.
 - Let `knowledge_phase` choose emphasis inside the existing taxonomy: framing gaps go to overview/product docs, design gaps to current-state design docs, contract gaps to reference docs, and operations gaps to plan or scorecard docs.
 
