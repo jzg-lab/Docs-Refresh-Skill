@@ -527,6 +527,18 @@ fi
 
 preferred_mode_doc="modes/$doc_system_mode.md"
 
+stale_plan_placement=()
+
+if [[ "$doc_system_mode" == "structured" ]] && has_file "docs/exec-plans"; then
+  exec_plans_root="$repo_root/docs/exec-plans"
+  while IFS= read -r -d '' plan_file; do
+    if grep -qiE '(状态[：:]\s*(Done|✓|完成|Complete)|[Ss]tatus[：:]\s*(Done|✓|Complete|完成))' "$plan_file" 2>/dev/null; then
+      filename="${plan_file##*/}"
+      add_unique stale_plan_placement "$filename"
+    fi
+  done < <(find "$exec_plans_root" -maxdepth 1 -name '*.md' -not -name 'index.md' -not -name 'README.md' -type f -print0 2>/dev/null)
+fi
+
 knowledge_phase=
 problem_frame_state=
 boundary_state=
@@ -695,6 +707,8 @@ echo "[routing]"
 echo "doc_system_mode=$doc_system_mode"
 echo "mode_reason=$mode_reason"
 echo "preferred_mode_doc=$preferred_mode_doc"
+echo "stale_plan_placement=$(to_csv "${stale_plan_placement[@]}")"
+
 echo
 echo "[knowledge]"
 echo "knowledge_phase=$knowledge_phase"
