@@ -128,12 +128,13 @@ The workflow will:
 - read repository guidance first
 - try the bundled diff collector first
 - fall back to manual routing if the bundled collector is unavailable
-- treat collector fields such as `repo_taxonomy_mode`, `taxonomy_health`, `role_map`, `normalization_candidates`, `migration_candidates`, `plan_readiness`, and `active_plan_target` as the routing contract
+- treat collector fields such as `repo_taxonomy_mode`, `taxonomy_health`, `role_map`, `normalization_candidates`, `migration_candidates`, `plan_readiness`, `stale_plan_placement`, and `active_plan_target` as the routing contract
 - read the collector's docs mode and foundation phase before loading detailed instructions when collector output exists
 - inspect only the code, schema, generated artifacts, and docs needed to confirm behavior or real planning constraints
 - pressure-test problem frame, system boundaries, decisions, contracts, and validation before inventing more structure
 - update the fewest authoritative docs possible
 - explicit execution-ready future work belongs in `docs/exec-plans/active/`, while exploratory or still-fluid work should tighten existing product or design docs first
+- audit stale execution plans even when git is clean, so done-marked plan files do not remain in the root or `active/`
 - reuse healthy custom docs domains when their role is clear instead of flattening them by default
 - distinguish validation truth from a bare `docs/exec-plans/` scaffold
 - use standard domains such as `docs/design-docs/`, `docs/product-specs/`, `docs/references/`, `docs/generated/`, `docs/exec-plans/`, `DESIGN.md`, `FRONTEND.md`, `PLANS.md`, `PRODUCT_SENSE.md`, `QUALITY_SCORE.md`, `RELIABILITY.md`, and `SECURITY.md` before inventing new folders

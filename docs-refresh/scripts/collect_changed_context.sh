@@ -557,6 +557,12 @@ domain_supports_contracts() {
   [[ "$role" == "reference" ]]
 }
 
+plan_file_has_done_status() {
+  local path="$1"
+
+  grep -qiE '(状态|status)[[:space:]]*[：:][[:space:]]*(done|complete|completed|完成|已完成|✓)' "$path" 2>/dev/null
+}
+
 add_existing_target() {
   local array_name="$1"
   local path="$2"
@@ -1082,6 +1088,35 @@ fi
 
 preferred_mode_doc="modes/$doc_system_mode.md"
 
+stale_plan_placement=()
+
+if has_file "docs/exec-plans"; then
+  exec_plans_root="$repo_root/docs/exec-plans"
+
+  while IFS= read -r -d '' plan_file; do
+    rel_plan_file="${plan_file#$repo_root/}"
+
+    case "$rel_plan_file" in
+      docs/exec-plans/index.md|docs/exec-plans/README.md|docs/exec-plans/completed/*)
+        continue
+        ;;
+    esac
+
+    if plan_file_has_done_status "$plan_file"; then
+      add_unique stale_plan_placement "$rel_plan_file"
+    fi
+  done < <(find "$exec_plans_root" \
+    \( -path "$exec_plans_root/completed" -o -path "$exec_plans_root/completed/*" \) -prune \
+    -o -name '*.md' -type f -print0 2>/dev/null)
+fi
+
+if [[ "${#stale_plan_placement[@]}" -gt 0 ]]; then
+  add_unique doc_review_triggers "plan-lifecycle-drift"
+  for target in "${plan_targets[@]}"; do
+    add_unique preferred_targets "$target"
+  done
+fi
+
 problem_frame_state="missing"
 boundary_state="missing"
 decision_state="not-needed-yet"
@@ -1237,7 +1272,9 @@ else
   knowledge_phase="operations"
 fi
 
-if has_tag "only-tests" "${classification[@]}"; then
+if [[ "${#stale_plan_placement[@]}" -gt 0 ]]; then
+  doc_refresh_hint="repair-plan-lifecycle-drift"
+elif has_tag "only-tests" "${classification[@]}"; then
   doc_refresh_hint="usually-no-doc-update"
 elif has_tag "only-docs" "${classification[@]}"; then
   doc_refresh_hint="docs-already-touched"
@@ -1277,6 +1314,7 @@ echo "[planning]"
 echo "planning_surface_state=$planning_surface_state"
 echo "plan_scaffold_state=$plan_scaffold_state"
 echo "plan_readiness=$plan_readiness"
+echo "stale_plan_placement=$(to_csv "${stale_plan_placement[@]}")"
 echo "active_plan_target=$active_plan_target"
 echo "custom_planning_domains=$(to_csv "${custom_planning_domains[@]}")"
 echo
