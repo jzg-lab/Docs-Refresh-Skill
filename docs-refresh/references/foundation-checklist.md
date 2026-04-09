@@ -9,7 +9,9 @@ The goal is to strengthen project understanding before inventing more structure.
 - Treat PRD, SRS, architecture notes, ADRs, and risk logs as documentation responsibilities, not mandatory filenames.
 - Prefer the smallest durable document that can own the fact today.
 - Prefer the repository's named docs surfaces before inventing parallel files: `PRODUCT_SENSE.md`, `DESIGN.md`, `FRONTEND.md`, `PLANS.md`, `QUALITY_SCORE.md`, `RELIABILITY.md`, and `SECURITY.md` should carry their intended responsibilities when they already exist.
+- When the collector reports a clear `role_map` for custom docs domains, reuse those domains first. Normalize only when authority is drifting, the map is broken, or execution planning needs the standard scaffold.
 - Exploratory future work belongs in product or design docs; execution-ready work belongs in `docs/exec-plans/active/`.
+- Do not treat an empty `docs/exec-plans/` scaffold as validation truth by itself.
 - Split into a new subtree only after a domain has earned a second durable page.
 
 ## Pressure-Test Questions
@@ -48,6 +50,7 @@ The goal is to strengthen project understanding before inventing more structure.
 - What are the main path, edge cases, and failure modes?
 - What checks prove the system is acceptable?
 - What rollout, observability, security, reliability, or debt notes must stay durable?
+- Is the repository's validation truth already carried by runbooks, reliability notes, or scorecards, or are you only looking at a planning scaffold?
 - Is this future work still being shaped, or is it ready to become an active execution plan?
 - Typical homes: `PLANS.md`, `QUALITY_SCORE.md`, `RELIABILITY.md`, `SECURITY.md`, `RISKS.md`, `OPEN_QUESTIONS.md`, `docs/exec-plans/`.
 
