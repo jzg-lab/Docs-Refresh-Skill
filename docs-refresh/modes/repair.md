@@ -7,6 +7,8 @@ The repository has a docs system, but its navigation or authority surfaces are s
 ## Focus
 
 - Repair `AGENTS.md`, `ARCHITECTURE.md`, index pages, broken authority pointers, or missing cross-links before expanding content.
+- Do not let missing `docs/exec-plans/` scaffold hijack explicit planning intent.
+- When the user is creating execution-ready future work, repair only the minimum missing scaffold needed to land the active plan, then place that plan in `docs/exec-plans/active/` in the same pass.
 - Restore a usable map first, then update the smallest authoritative document that owns the changed fact.
 
 ## Repair Triggers
@@ -19,6 +21,7 @@ The repository has a docs system, but its navigation or authority surfaces are s
 ## Working Rule
 
 - Do not patch around a broken map by stuffing more truth into leaf pages. Repair navigation and authority first, then continue with normal convergence.
+- If the blocked surface is `docs/exec-plans/`, scaffold or restore `index.md`, `active/`, and `completed/` as needed, but still finish the active-plan update in the same change set when planning intent is explicit.
 - After the map is usable again, close the highest-risk foundation gap instead of inventing new placeholder structure.
 - Missing `AGENTS.md` alone is not `repair`.
 - Sparse docs alone are not `repair`.

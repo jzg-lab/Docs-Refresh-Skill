@@ -1,8 +1,26 @@
 # Docs Refresh
 
-`docs-refresh` is a portable documentation-refresh workflow packaged in a reusable prompt/skill layout. It treats the repository as the record system, starts from `AGENTS.md` as a map, inspects current workspace state, and uses progressive disclosure to load only the workflow branch that matches the repository's current docs maturity and foundation maturity.
+`docs-refresh` is a reusable workflow for documentation-driven, agent-first development.
+
+It helps an agent keep your repo's docs system usable while the project is moving fast: current behavior goes back into authoritative docs, new feature ideas get routed into the right design or product docs, and execution-ready work becomes an active plan instead of getting lost in chat.
+
+This project is inspired by OpenAI's Harness Engineering approach: keep the repository as the record system, keep `AGENTS.md` short and navigational, and make plans and docs first-class engineering artifacts.
+
+Use it when you need to:
+
+- sync docs after code changes
+- turn scattered docs into a clean, navigable docs system
+- add a new feature and decide whether it belongs in product/design docs or `docs/exec-plans/active/`
+- repair stale indexes, broken authority pointers, or drifting doc structure
+- keep `PRODUCT_SENSE.md`, `DESIGN.md`, `FRONTEND.md`, `PLANS.md`, `QUALITY_SCORE.md`, `RELIABILITY.md`, and `SECURITY.md` actually useful as the repo grows
 
 The core workflow lives in plain Markdown at `docs-refresh/SKILL.md`, so it can be adapted to any agent or prompt system that can reuse structured instructions.
+
+## Why Docs Refresh
+
+- Agents stop dumping everything into one giant `AGENTS.md` or random markdown files.
+- New work lands in the right place: current truth in authoritative docs, fuzzy ideas in product/design docs, execution-ready work in `docs/exec-plans/active/`.
+- Your existing docs system stays usable as the repo grows instead of drifting into stale indexes, duplicate folders, and abandoned planning notes.
 
 ## Installation
 
@@ -106,13 +124,17 @@ Invoke the workflow however your host platform exposes reusable prompts or skill
 
 The workflow will:
 
+- classify the request as current-state refresh, future-spec refinement, or actionable execution planning
 - read repository guidance first
 - try the bundled diff collector first
 - fall back to manual routing if the bundled collector is unavailable
 - read the collector's docs mode and foundation phase before loading detailed instructions when collector output exists
-- inspect only the code, schema, generated artifacts, and docs needed to confirm behavior
+- inspect only the code, schema, generated artifacts, and docs needed to confirm behavior or real planning constraints
 - pressure-test problem frame, system boundaries, decisions, contracts, and validation before inventing more structure
 - update the fewest authoritative docs possible
+- explicit execution-ready future work belongs in `docs/exec-plans/active/`, while exploratory or still-fluid work should tighten existing product or design docs first
+- use standard domains such as `docs/design-docs/`, `docs/product-specs/`, `docs/references/`, `docs/generated/`, `docs/exec-plans/`, `DESIGN.md`, `FRONTEND.md`, `PLANS.md`, `PRODUCT_SENSE.md`, `QUALITY_SCORE.md`, `RELIABILITY.md`, and `SECURITY.md` before inventing new folders
+- ad hoc custom docs folders should be decomposed into the standard domains and their prior contents preserved under `old_docs/`
 - stop after explaining what changed or why no doc update was needed
 
 It will not stage, commit, or clean up git state automatically.
@@ -129,6 +151,8 @@ Missing `AGENTS.md` alone does not imply `repair`. Sparse docs usually mean `boo
 New repositories should grow in phases. `docs-refresh` should not generate a full docs tree on first contact unless the repository has already earned those durable domains.
 
 When a repository has earned `docs/exec-plans/` as a first-class documentation domain, the default scaffold is `docs/exec-plans/index.md`, `docs/exec-plans/active/`, and `docs/exec-plans/completed/`. Keep empty lifecycle buckets versioned with placeholder files such as `.gitkeep`, and add additional plan artifacts such as debt trackers only when they carry durable repository truth.
+
+In structured repos, treat the named domains and cross-cutting docs as intentional landing zones, not decorative examples. `PRODUCT_SENSE.md` should absorb framing work, `DESIGN.md` and `FRONTEND.md` should absorb current design truth, `PLANS.md`, `QUALITY_SCORE.md`, `RELIABILITY.md`, and `SECURITY.md` should absorb operational and validation truth, and ad hoc custom docs folders should be decomposed into the standard domains and their prior contents preserved under `old_docs/`.
 
 ## Foundation Phases
 
@@ -173,7 +197,8 @@ docs/
 ├── PRODUCT_SENSE.md
 ├── QUALITY_SCORE.md
 ├── RELIABILITY.md
-└── SECURITY.md
+├── SECURITY.md
+└── old_docs/
 ```
 
 ## Repository Layout
