@@ -1056,9 +1056,6 @@ if [[ "${#missing_index_targets[@]}" -gt 0 ]]; then
 elif [[ "${#missing_plan_scaffold_targets[@]}" -gt 0 ]]; then
   doc_system_mode="repair"
   mode_reason="incomplete-exec-plan-scaffold"
-elif [[ "${#split_doc_domains[@]}" -gt 0 ]] && has_tag "navigation" "${doc_review_triggers[@]}"; then
-  doc_system_mode="repair"
-  mode_reason="navigation-drift-in-doc-system"
 elif [[ "${#split_doc_domains[@]}" -gt 0 ]] && [[ "$has_mapped_role_domain" -eq 0 ]]; then
   doc_system_mode="repair"
   mode_reason="doc-system-without-usable-role-map"
@@ -1274,12 +1271,12 @@ fi
 
 if [[ "${#stale_plan_placement[@]}" -gt 0 ]]; then
   doc_refresh_hint="repair-plan-lifecycle-drift"
+elif has_tag "navigation" "${doc_review_triggers[@]}"; then
+  doc_refresh_hint="review-map-and-authority-docs"
 elif has_tag "only-tests" "${classification[@]}"; then
   doc_refresh_hint="usually-no-doc-update"
 elif has_tag "only-docs" "${classification[@]}"; then
   doc_refresh_hint="docs-already-touched"
-elif has_tag "navigation" "${doc_review_triggers[@]}"; then
-  doc_refresh_hint="review-map-and-authority-docs"
 elif [[ "${#doc_review_triggers[@]}" -gt 0 ]]; then
   doc_refresh_hint="review-authoritative-docs"
 else
