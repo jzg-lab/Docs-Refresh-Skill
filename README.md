@@ -1,5 +1,6 @@
 # Docs Refresh
-
+---
+![img.png](images/img.png)
 `docs-refresh` is a reusable workflow for documentation-driven, agent-first development.
 
 It helps an agent keep your repo's docs system usable while the project is moving fast: current behavior goes back into authoritative docs, new feature ideas get routed into the right design or product docs, execution-ready work becomes an active plan instead of getting lost in chat, and mixed or custom docs trees get mapped before the workflow tries to normalize them.
@@ -17,7 +18,7 @@ Use it when you need to:
 The core workflow lives in plain Markdown at `docs-refresh/SKILL.md`, so it can be adapted to any agent or prompt system that can reuse structured instructions.
 
 ## Why Docs Refresh
-
+![img_1.png](images/img_1.png)
 - Agents stop dumping everything into one giant `AGENTS.md` or random markdown files.
 - New work lands in the right place: current truth in authoritative docs, fuzzy ideas in product/design docs, execution-ready work in `docs/exec-plans/active/`.
 - Your existing docs system stays usable as the repo grows instead of drifting into stale indexes, duplicate folders, and abandoned planning notes, because the collector maps healthy custom docs domains before recommending normalization.
