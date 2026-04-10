@@ -9,12 +9,6 @@ This project is inspired by OpenAI's Harness Engineering approach(https://openai
 
 Use it when you need to:
 
-- sync docs after code changes
-- turn scattered docs into a clean, navigable docs system
-- add a new feature and decide whether it belongs in product/design docs or `docs/exec-plans/active/`
-- repair stale indexes, broken authority pointers, or drifting doc structure
-- keep `PRODUCT_SENSE.md`, `DESIGN.md`, `FRONTEND.md`, `PLANS.md`, `QUALITY_SCORE.md`, `RELIABILITY.md`, and `SECURITY.md` actually useful as the repo grows
-
 The core workflow lives in plain Markdown at `docs-refresh/SKILL.md`, so it can be adapted to any agent or prompt system that can reuse structured instructions.
 
 ## Why Docs Refresh
@@ -161,9 +155,9 @@ It will not stage, commit, or clean up git state automatically.
 
 Plan lifecycle and normalization rules are deliberate: audit stale execution plans even when git is clean, move any plan marked `done`, `completed`, `passed`, `已完成`, or equivalent complete-state language out of `docs/exec-plans/active/` and into `docs/exec-plans/completed/` in the same pass, and repair indexes and cross-links after lifecycle moves so path semantics and content semantics stay aligned.
 
-The default scaffold is `docs/exec-plans/index.md`, `docs/exec-plans/active/`, and `docs/exec-plans/completed/`, with placeholder files such as `.gitkeep` keeping empty lifecycle buckets versioned. In other words, the default scaffold is `docs/exec-plans/index.md`, `docs/exec-plans/active/`, and `docs/exec-plans/completed/`.
+The default scaffold is `docs/exec-plans/index.md`, `docs/exec-plans/active/`, and `docs/exec-plans/completed/`, with placeholder files such as `.gitkeep` keeping empty lifecycle buckets versioned.
 
-Explicit execution-ready future work belongs in `docs/exec-plans/active/`, while exploratory or still-fluid work should tighten existing product or design docs first. In policy terms, explicit execution-ready future work belongs in `docs/exec-plans/active/`, while exploratory or still-fluid work should tighten existing product or design docs first. Also: reuse healthy custom docs domains when their role is clear instead of flattening them by default, distinguish validation truth from a bare `docs/exec-plans/` scaffold, and when drift, duplicate authority, or execution planning requires standardization, ad hoc custom docs folders should be decomposed into the standard domains and their prior contents preserved under `old_docs/`.
+Explicit execution-ready future work belongs in `docs/exec-plans/active/`, while exploratory or still-fluid work should tighten existing product or design docs first. Also: reuse healthy custom docs domains when their role is clear, distinguish validation truth from a bare `docs/exec-plans/` scaffold, and when drift, duplicate authority, or execution planning requires standardization, ad hoc custom docs folders should be decomposed into the standard domains and their prior contents preserved under `old_docs/`.
 
 ## Modes
 

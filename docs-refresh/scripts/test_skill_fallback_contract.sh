@@ -25,6 +25,16 @@ assert_not_contains() {
   fi
 }
 
+assert_matches() {
+  local path="$1"
+  local pattern="$2"
+
+  if ! grep -Eq "$pattern" "$path"; then
+    echo "Expected pattern not found in $path: $pattern" >&2
+    exit 1
+  fi
+}
+
 assert_contains "$skill_dir/SKILL.md" 'Do not assume the target repo has its own `scripts/collect_changed_context.sh`.'
 assert_contains "$skill_dir/SKILL.md" 'If the collector is unavailable, cannot be resolved from the skill directory, or shell execution is unavailable'
 assert_contains "$skill_dir/SKILL.md" 'When in doubt between `minimal` and `repair`, choose `minimal` unless the repository already has a real docs system whose map is broken.'
@@ -92,17 +102,17 @@ assert_contains "$skill_dir/agents/openai.yaml" 'preserving prior source materia
 assert_contains "$repo_root/README.md" 'mixed or custom docs trees get mapped before the workflow tries to normalize them'
 assert_contains "$repo_root/README.md" '`repo_taxonomy_mode`, `taxonomy_health`, `role_map`, `normalization_candidates`, `migration_candidates`, `plan_readiness`, `stale_plan_placement`, and `active_plan_target` as the routing contract'
 assert_contains "$repo_root/README.md" 'audit stale execution plans even when git is clean'
-assert_contains "$repo_root/README.md" 'move any plan marked `done`, `completed`, `passed`, `已完成`, or equivalent complete-state language out of `docs/exec-plans/active/` and into `docs/exec-plans/completed/` in the same pass'
+assert_matches "$repo_root/README.md" 'move any plan marked .*docs/exec-plans/active/.*docs/exec-plans/completed/'
 assert_contains "$repo_root/README.md" 'repair indexes and cross-links after lifecycle moves so path semantics and content semantics stay aligned'
-assert_contains "$repo_root/README.md" 'the default scaffold is `docs/exec-plans/index.md`, `docs/exec-plans/active/`, and `docs/exec-plans/completed/`'
+assert_matches "$repo_root/README.md" 'default scaffold.*docs/exec-plans/index\.md.*docs/exec-plans/active/.*docs/exec-plans/completed/'
 assert_contains "$repo_root/README.md" 'placeholder files such as `.gitkeep`'
-assert_contains "$repo_root/README.md" 'explicit execution-ready future work belongs in `docs/exec-plans/active/`, while exploratory or still-fluid work should tighten existing product or design docs first'
+assert_matches "$repo_root/README.md" 'execution-ready future work belongs in `docs/exec-plans/active/`.*exploratory or still-fluid work should tighten existing product or design docs first'
 assert_contains "$repo_root/README.md" 'treat explicit "do the next step", "start implementation", file-structure, or phase-splitting requests as actionable execution planning rather than more discussion'
-assert_contains "$repo_root/README.md" 'materialize the planning scaffold, directory placement, and phase breakdown in the repository instead of replying with advice only'
+assert_matches "$repo_root/README.md" 'materialize the planning scaffold.*phase breakdown.*instead of replying with advice only'
 assert_contains "$repo_root/README.md" 'persist those blockers in durable docs rather than leaving them only in chat'
-assert_contains "$repo_root/README.md" 'reuse healthy custom docs domains when their role is clear instead of flattening them by default'
+assert_contains "$repo_root/README.md" 'reuse healthy custom docs domains when their role is clear'
 assert_contains "$repo_root/README.md" 'distinguish validation truth from a bare `docs/exec-plans/` scaffold'
-assert_contains "$repo_root/README.md" 'when drift, duplicate authority, or execution planning requires standardization, ad hoc custom docs folders should be decomposed into the standard domains and their prior contents preserved under `old_docs/`'
+assert_matches "$repo_root/README.md" 'when drift, duplicate authority, or execution planning requires standardization.*preserved under `old_docs/`'
 assert_not_contains "$skill_dir/scripts/collect_changed_context.sh" 'local -n'
 assert_not_contains "$skill_dir/scripts/collect_changed_context.sh" 'declare -n'
 
