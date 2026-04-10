@@ -14,11 +14,12 @@ The repository already has split docs domains. That can mean the standard taxono
 - Keep plans and debt in plan artifacts, but do not hide current system truth there.
 - Use the repository's named cross-cutting docs intentionally: `PRODUCT_SENSE.md` for framing, `DESIGN.md` plus `FRONTEND.md` for current design truth, and `PLANS.md`, `QUALITY_SCORE.md`, `RELIABILITY.md`, and `SECURITY.md` for validation and operations.
 - Keep `docs/exec-plans/` navigable: `index.md` is the entry point, `active/` plus `completed/` are the default lifecycle buckets unless the repository already defines a stricter convention, and empty buckets should stay versioned with placeholder files.
-- Lifecycle consistency check: when the collector reports `stale_plan_placement` non-empty, move each listed done-marked plan file into `docs/exec-plans/completed/` in the same pass. Do not leave a plan in `active/` after its content has been changed to `done`, `completed`, `passed`, `已完成`, or equivalent complete-state language.
-- Shared baseline, prerequisite, and common acceptance plans are not exempt. If they are still evolving, they can stay in `active/`; if they have been accepted, move them to `completed/` and have later active phases link to the stable `completed/` path instead of the old `active/` path.
-- After a lifecycle move, update `docs/exec-plans/index.md`, `docs/exec-plans/active/README.md` when it exists, `docs/exec-plans/README.md` when it exists, parent or umbrella plan docs, and all active phase cross-links that still reference the old location.
-- Negative example: changing `active/README.md` or a plan body to say a plan is complete while the file still lives under `active/`.
-- Correct outcome: move the plan into `completed/` and repair every navigation or cross-reference entry point that still points at the old `active/` path.
+- Lifecycle consistency:
+  - When the collector reports `stale_plan_placement` non-empty, move each listed done-marked plan file into `docs/exec-plans/completed/` in the same pass.
+  - Shared baseline, prerequisite, and common acceptance plans are not exempt. If they are still evolving, they can stay in `active/`; if they have been accepted, move them to `completed/` and have later active phases link to the stable `completed/` path instead of the old `active/` path.
+  - After a lifecycle move, update `docs/exec-plans/index.md`, `docs/exec-plans/active/README.md` when it exists, `docs/exec-plans/README.md` when it exists, parent or umbrella plan docs, and all active phase cross-links that still reference the old location.
+  - Negative example: changing `active/README.md` or a plan body to say a plan is complete while the file still lives under `active/`.
+  - Correct outcome: move the plan into `completed/` and repair every navigation or cross-reference entry point that still points at the old `active/` path.
 - When the user brings explicit future work that is ready for execution, create or update an active plan artifact under `docs/exec-plans/active/`. If the collector reports `plan_readiness=needs-standardization`, create the standard scaffold and migrate only the smallest planning surface needed.
 - If the work is still exploratory, incomplete, or not yet execution-ready, tighten `PRODUCT_SENSE.md`, `DESIGN.md`, `FRONTEND.md`, `docs/product-specs/`, or `docs/design-docs/` instead of creating an active plan.
 - Custom domains that map cleanly and are not drifting can remain in place for current-state, reference, or validation truth.

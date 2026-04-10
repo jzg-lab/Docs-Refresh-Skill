@@ -5,7 +5,7 @@ description: Refresh authoritative docs through a routed progressive-disclosure 
 
 # Docs Refresh
 
-Use this to keep durable docs authoritative for both the repository's current truth and its explicit planned work. Sync implemented behavior from the repository's real state, and land execution-ready future work in durable plan artifacts. It is not a general writing prompt, and it should not confuse a folder tree with a real project understanding.
+Use this to keep durable docs authoritative for both current truth and explicit planned work. Sync implemented behavior from the repository's real state, and land execution-ready future work in durable plan artifacts. It is not a general writing prompt and should not confuse a folder tree with real project understanding.
 
 Keep the workflow platform-neutral. Host-specific aliases, launcher syntax, and metadata belong in adapters.
 
@@ -25,15 +25,14 @@ Keep the workflow platform-neutral. Host-specific aliases, launcher syntax, and 
 ## Route First
 
 1. Read repository guidance first. Start with `AGENTS.md` when present, then follow only the pointers needed to find authority, ownership, freshness rules, and doc-lint requirements.
-2. Classify the user request before mode routing. Decide whether the user is asking for a current-state refresh, future-spec refinement, or actionable execution planning.
-3. Resolve the directory containing this `SKILL.md`.
-4. If you can run bundled files from the skill directory, run the collector from that skill directory against `[repo-root]`. Do not assume the target repo has its own `scripts/collect_changed_context.sh`.
-5. If the collector succeeds, read `[repo_layout]`, `[planning]`, `[routing]`, and `[knowledge]`. Treat `repo_taxonomy_mode`, `taxonomy_health`, `role_map`, `normalization_candidates`, `migration_candidates`, `plan_readiness`, `stale_plan_placement`, and `active_plan_target` as the routing contract. Open only the matching mode file from `preferred_mode_doc`, and load [references/foundation-checklist.md](references/foundation-checklist.md) when `knowledge_phase` is not `operations` or `foundation_gaps` is non-empty.
-6. If the collector is unavailable, cannot be resolved from the skill directory, or shell execution is unavailable, manually collect `git status --short`, staged and unstaged changed files, untracked files, diff stat, the repository docs layout, any obvious custom split domains under `docs/`, and the foundation surfaces such as overview, architecture, decision, reference, validation, and planning docs.
-7. Use the manual routing fallback below to choose exactly one mode file, then infer the matching foundation phase with the checklist reference.
-8. Use the current workspace state as the source of truth for implemented behavior, but use explicit user intent plus repository constraints for future-work plan artifacts.
-9. Inspect only the code, schema, generated artifacts, and current docs needed to confirm the real behavior change or the real planning constraint.
-10. Stop after explaining what changed or why no doc change was needed.
+2. Resolve the directory containing this `SKILL.md`, then classify the request before mode routing: current-state refresh, future-spec refinement, or actionable execution planning.
+3. If you can run bundled files from the skill directory, run the collector from that skill directory against `[repo-root]`. Do not assume the target repo has its own `scripts/collect_changed_context.sh`.
+4. If the collector succeeds, read `[repo_layout]`, `[planning]`, `[routing]`, and `[knowledge]`. Treat `repo_taxonomy_mode`, `taxonomy_health`, `role_map`, `normalization_candidates`, `migration_candidates`, `plan_readiness`, `stale_plan_placement`, and `active_plan_target` as the routing contract. Open only the file named by `preferred_mode_doc`. Load [references/foundation-checklist.md](references/foundation-checklist.md) when `knowledge_phase` is not `operations` or `foundation_gaps` is non-empty.
+5. If the collector is unavailable, cannot be resolved from the skill directory, or shell execution is unavailable, manually collect `git status --short`, changed files, diff stat, the docs layout, obvious custom split domains under `docs/`, and the core foundation surfaces.
+6. Use the manual routing fallback below to choose exactly one mode file, then infer the foundation phase with the checklist reference.
+7. Use the current workspace state as the source of truth for implemented behavior, but use explicit user intent plus repository constraints for future-work plan artifacts.
+8. Inspect only the code, schema, generated artifacts, and current docs needed to confirm the real behavior change or the real planning constraint.
+9. Stop after explaining what changed or why no doc change was needed.
 
 ## Manual Routing Fallback
 
@@ -42,7 +41,7 @@ Use this only when the bundled collector cannot be run from the skill directory 
 - `bootstrap`: no split docs tree exists, and the repository does not yet have a stable docs system beyond `README.md` or a few incidental docs. `README.md` only is still `bootstrap`.
 - `minimal`: no split docs tree exists, but the repository already has one or more stable living docs such as `AGENTS.md`, `ARCHITECTURE.md`, or durable top-level current-state docs. A repo can be `minimal` even if `AGENTS.md` is absent.
 - `structured`: split docs domains already exist, either in the standard taxonomy or as healthy custom domains under `docs/` whose role map is still usable.
-- `repair`: a real docs system exists, but its map or authority is broken enough that content edits would deepen drift: missing index pages, stale or broken `AGENTS.md` or `ARCHITECTURE.md`, broken cross-links, no usable navigation path from entry docs to owning pages, or a custom docs tree whose role map is no longer trustworthy.
+- `repair`: a real docs system exists, but its map or authority is broken enough that content edits would deepen drift.
 - Missing `AGENTS.md` alone does not mean `repair`.
 - Sparse docs alone do not mean `repair`.
 - When in doubt between `minimal` and `repair`, choose `minimal` unless the repository already has a real docs system whose map is broken.
@@ -64,15 +63,9 @@ After you choose a mode, use the collector's `knowledge_phase` when available. I
 - Force a documentation review when the change touches APIs, schema, CLI flags, run modes, scheduler behavior, trigger flow, core architecture, state model, external contracts, durable entry points, documented core beliefs, or stale navigation.
 - If the signal is ambiguous, inspect the diff before deciding. Do not update docs just because code changed.
 - Use current-state docs for what is true today, plan artifacts for explicit committed future work, and product or design docs for future behavior that is still being shaped.
-- Do not confuse plan scaffolding with validation truth. An empty or newly scaffolded `docs/exec-plans/` tree does not, by itself, satisfy reliability, security, quality, or rollout documentation.
-- Create or update `docs/exec-plans/active/` when the user explicitly wants the work done and you can write a concrete goal plus scope or constraints and acceptance criteria or immediate next steps.
-- If the idea is still exploratory, incomplete, or not yet execution-ready, tighten `PRODUCT_SENSE.md`, `DESIGN.md`, `FRONTEND.md`, `docs/product-specs/`, or `docs/design-docs/` instead of creating an active plan.
+- Planning split: Do not confuse plan scaffolding with validation truth. Create or update `docs/exec-plans/active/` only for execution-ready work; otherwise tighten `PRODUCT_SENSE.md`, `DESIGN.md`, `FRONTEND.md`, `docs/product-specs/`, or `docs/design-docs/`.
 - If the collector reports `repo_taxonomy_mode=custom` or `repo_taxonomy_mode=mixed`, reuse healthy custom domains when their `role_map` is clear. Normalize only the smallest conflicting surfaces identified by `normalization_candidates` or `migration_candidates`.
-- In structured repos with a standard `docs/exec-plans/` tree, audit `stale_plan_placement` even when git is clean. If a plan under the root or `active/` is marked `done`, `complete`, `completed`, `passed`, `已完成`, or equivalent accepted-complete language, move it to `completed/` in the same pass.
-- Do not leave a completed-marked plan under `docs/exec-plans/active/` just because later phases still reference it. Path semantics and content semantics must agree unless the repository explicitly documents a different lifecycle convention.
-- Shared baseline, prerequisite, or common acceptance plans follow the same lifecycle rule: keep them in `active/` only while they are still evolving; once accepted, move them to `completed/` and update later active plans to link to the stable `completed/` path.
-- When a plan moves from `active/` to `completed/`, update `docs/exec-plans/index.md`, `docs/exec-plans/active/README.md` when it exists, parent or umbrella plan docs, and all known cross-links that still point at the old `active/` path.
-- Treat `completed in content, still in active/` as a lifecycle inconsistency to fix in the same round, not as an optional cleanup item.
+- Plan lifecycle: In structured repos with a standard `docs/exec-plans/` tree, audit `stale_plan_placement` even when git is clean. Move done-marked plans from the root or `active/` into `completed/` in the same pass, including shared baseline or prerequisite plans once they are accepted. Update indexes, umbrella docs, and cross-links so path semantics and content semantics stay aligned. Treat `completed in content, still in active/` as a lifecycle inconsistency to fix immediately.
 - Treat `old_docs/` as a legacy archive, not as a convergence point for new truth.
 - In `bootstrap` and `minimal` repos, strengthen the founding pack before expanding taxonomy. A new docs subtree is the last move, not the first.
 - When a repository has earned `docs/exec-plans/` as a durable plan domain, keep that subtree navigable. The default scaffold is `docs/exec-plans/index.md`, `docs/exec-plans/active/`, and `docs/exec-plans/completed/`.
@@ -91,10 +84,10 @@ After you choose a mode, use the collector's `knowledge_phase` when available. I
 
 ## Modes
 
-- [modes/bootstrap.md](modes/bootstrap.md): Repos with no real docs system yet. Start with phased growth from `README.md`, `AGENTS.md`, and only add deeper structure when durable domains appear.
-- [modes/minimal.md](modes/minimal.md): Repos with core living docs but no split docs taxonomy. Prefer updating those docs and only create the first subtree when it has earned a second durable page.
-- [modes/structured.md](modes/structured.md): Repos that already have split docs domains. Preserve the existing taxonomy and converge to the smallest authoritative page.
-- [modes/repair.md](modes/repair.md): Repos whose docs system exists but navigation or authority surfaces are stale. Repair the map and indexes before expanding content.
+- [modes/bootstrap.md](modes/bootstrap.md): no real docs system yet; grow a founding pack before adding taxonomy.
+- [modes/minimal.md](modes/minimal.md): core living docs exist, but no split docs tree yet; strengthen those docs first.
+- [modes/structured.md](modes/structured.md): split docs domains already exist; preserve the taxonomy and converge to the owning page.
+- [modes/repair.md](modes/repair.md): the docs system exists but the map is stale; repair navigation and authority before expanding content.
 - Each mode file supports both collector-selected routing and the manual fallback rules above.
 
 ## Explain The Result
@@ -106,7 +99,7 @@ If documentation changed, report:
 - which documents changed
 - why those documents were the right convergence points
 - whether the change stayed in current-state docs, future-spec docs, or an active execution plan
-- which role map, normalization decision, or migration signal you relied on when custom docs domains were present
+- any role-map, normalization, or migration decision used for custom docs domains
 - whether `AGENTS.md` stayed unchanged on purpose, or why its navigation changed
 - why you reused existing docs instead of creating new files
 - whether any legacy custom docs were preserved under `old_docs/`

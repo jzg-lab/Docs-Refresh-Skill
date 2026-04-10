@@ -17,12 +17,7 @@ The repository already has core living docs, but it has not yet split into a dur
 
 - Create the first domain-specific subtree only when it has earned a second durable page in that domain.
 - Keep exploratory future work in the existing product or design docs. When execution tracking becomes first-class enough to earn `docs/exec-plans/`, put actionable work under `docs/exec-plans/active/` instead of bloating `PLANS.md`.
-- When splitting for the first time, choose the subtree that matches the durable fact:
-  - `docs/design-docs/` for design principles and architecture rationale
-  - `docs/product-specs/` for product behavior and user-facing constraints
-  - `docs/references/` for schemas, contracts, and protocol detail
-  - `docs/generated/` for authoritative generated facts
-  - `docs/exec-plans/` for versioned plans and debt tracking; when you create this subtree, scaffold `index.md`, `active/`, and `completed/`, and keep empty buckets versioned with placeholder files
+- First split targets: `docs/design-docs/` for design rationale, `docs/product-specs/` for user-facing behavior, `docs/references/` for schemas and contracts, `docs/generated/` for authoritative generated facts, and `docs/exec-plans/` for versioned plans. When you create `docs/exec-plans/`, scaffold `index.md`, `active/`, and `completed/`, and keep empty buckets versioned with placeholder files.
 
 ## Working Rule
 
