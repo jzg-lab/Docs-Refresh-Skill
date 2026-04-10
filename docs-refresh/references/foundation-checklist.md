@@ -14,6 +14,8 @@ The goal is to strengthen project understanding before inventing more structure.
 - Do not treat an empty `docs/exec-plans/` scaffold as validation truth by itself.
 - Split into a new subtree only after a domain has earned a second durable page.
 - Treat explicit "do the next step now" intent as a pressure signal. If PRD plus spec, or equivalent scope, constraints, contracts, and acceptance notes, already exist, the active planning subtree is earned even in an otherwise early repo.
+- Ask the user concise clarifying questions when routing intent is materially ambiguous or when unresolved scope, dependencies, sequencing, or acceptance criteria would make an execution plan fake.
+- Once execution is ready, prefer a plan index plus one markdown file per execution phase over a single narrative execution document.
 - If execution is requested but the plan would still be fake, persist blockers as durable open questions or assumptions in the repository instead of leaving them only in chat.
 
 ## Pressure-Test Questions
@@ -54,7 +56,16 @@ The goal is to strengthen project understanding before inventing more structure.
 - What rollout, observability, security, reliability, or debt notes must stay durable?
 - Is the repository's validation truth already carried by runbooks, reliability notes, or scorecards, or are you only looking at a planning scaffold?
 - Is this future work still being shaped, or is it ready to become an active execution plan?
+- If it is ready for active execution, can you name concrete task units, their dependencies, and their done-when criteria without inventing missing facts?
+- If an old execution doc already exists, can it be cleanly decomposed into phase files, or do you need clarification before you split it?
 - Typical homes: `PLANS.md`, `QUALITY_SCORE.md`, `RELIABILITY.md`, `SECURITY.md`, `RISKS.md`, `OPEN_QUESTIONS.md`, `docs/exec-plans/`.
+
+### Clarification Gate
+
+- Would a different answer from the user change routing between current-state refresh, future-spec refinement, and actionable execution planning?
+- Would the ambiguity change task boundaries, dependency order, parallelism, or acceptance criteria?
+- If yes, ask before you generate or revise an active execution plan.
+- Do not stop for cosmetic ambiguity that does not affect route, ownership, sequencing, or acceptance.
 
 ## Phase Guidance
 

@@ -21,7 +21,11 @@ The repository already has split docs domains. That can mean the standard taxono
   - Negative example: changing `active/README.md` or a plan body to say a plan is complete while the file still lives under `active/`.
   - Correct outcome: move the plan into `completed/` and repair every navigation or cross-reference entry point that still points at the old `active/` path.
 - When the user brings explicit future work that is ready for execution, create or update an active plan artifact under `docs/exec-plans/active/`. If the collector reports `plan_readiness=needs-standardization`, create the standard scaffold and migrate only the smallest planning surface needed.
-- When explicit execution intent arrives after product or spec docs have already converged, do not answer with structure suggestions alone. Materialize the directory placement, active plan, and phase/file breakdown in the repository in the same pass.
+- When explicit execution intent arrives after product or spec docs have already converged, do not answer with structure suggestions alone. Materialize the directory placement, the active plan index, and the phase files in the repository in the same pass.
+- A taskified active plan is mandatory here: use one markdown file per execution phase, and inside each phase file define checklist units with preconditions, files to change, expected output, done-when criteria, blockers, and dependency or parallelism notes. Chapter-only plans are not execution-ready.
+- Treat `plan_readiness` as scaffold readiness, not as proof that the active plan content meets the execution contract.
+- If user intent is ambiguous or execution-critical details are materially unclear, ask concise clarifying questions before you route into active planning or break work into tasks.
+- If an existing plan lives as one vague markdown document, do not keep extending it in place once execution starts. Either split it into a plan index plus phase files under the active plan directory, or ask the user if phase boundaries are still materially unclear.
 - If the work is still exploratory, incomplete, or not yet execution-ready, tighten `PRODUCT_SENSE.md`, `DESIGN.md`, `FRONTEND.md`, `docs/product-specs/`, or `docs/design-docs/` instead of creating an active plan.
 - If the work is not execution-ready because of missing decisions, persist those open questions in the owning docs surfaces instead of leaving them as chat-only follow-up.
 - Custom domains that map cleanly and are not drifting can remain in place for current-state, reference, or validation truth.

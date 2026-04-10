@@ -34,5 +34,7 @@ The repository does not have a real docs system yet. Grow one in phases instead 
 - If decision or validation notes still fit inside `README.md` or `ARCHITECTURE.md`, keep them there until they earn a second durable page.
 - Bootstrap should leave the repository with a founding pack, not an empty cathedral of placeholder directories.
 - If the user is explicitly asking to execute next and the foundational inputs already constrain implementation, scaffold the minimum `docs/exec-plans/` structure and land the active plan in the same pass instead of stopping at product or design prose.
+- That active plan must be phase-structured and taskified. Keep one markdown file per execution phase once work is ready to run.
+- If routing intent or execution-critical details are materially unclear, ask the user concise clarifying questions before you generate the active plan.
 - If execution is requested but blocked by unresolved choices, create durable blockers in the repository, such as `docs/product-specs/`, `docs/design-docs/`, `OPEN_QUESTIONS.md`, or `ASSUMPTIONS.md`, rather than leaving the ambiguity only in chat.
 - Missing `AGENTS.md` is normal here. It is not, by itself, a repair signal.

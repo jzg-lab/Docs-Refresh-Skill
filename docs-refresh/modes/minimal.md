@@ -20,6 +20,8 @@ The repository already has core living docs, but it has not yet split into a dur
 - Keep exploratory future work in the existing product or design docs. When execution tracking becomes first-class enough to earn `docs/exec-plans/`, put actionable work under `docs/exec-plans/active/` instead of bloating `PLANS.md`.
 - First split targets: `docs/design-docs/` for design rationale, `docs/product-specs/` for user-facing behavior, `docs/references/` for schemas and contracts, `docs/generated/` for authoritative generated facts, and `docs/exec-plans/` for versioned plans. When you create `docs/exec-plans/`, scaffold `index.md`, `active/`, and `completed/`, and keep empty buckets versioned with placeholder files.
 - Explicit execute-now intent plus a sufficient future-work baseline such as PRD plus spec, or equivalent scope, constraints, contracts, and acceptance notes, means the planning domain has been earned. Create the minimum `docs/exec-plans/` scaffold and land the active plan instead of returning only advice.
+- In that active plan, require a plan index plus one markdown file per execution phase, with checklist-grade tasks and execution fields inside each phase file. A sectioned narrative plan is still refinement, not execution planning.
+- If scope, sequencing, dependencies, or acceptance are materially unclear, ask the user before taskifying the plan.
 - If the user wants to execute but the missing inputs would make the plan fake, persist those blockers in the owning docs surfaces instead of deferring them to chat.
 
 ## Working Rule

@@ -22,8 +22,9 @@ The core workflow lives in plain Markdown at `docs-refresh/SKILL.md`, so it can 
 1. Write a PRD and a spec first.
 2. Run `docs-refresh` to check boundaries, decisions, contracts, and validation gaps.
 3. If you want implementation to start, say it explicitly: "do the next step", "start implementation", "land the file structure", or "split this into phases".
-4. If the docs are ready, the skill should create or update the active execution plan under `docs/exec-plans/active/`, including file structure, phases, blockers, and acceptance points.
+4. If the docs are ready, the skill should create or update the active execution plan under `docs/exec-plans/active/` as a plan index plus one markdown file per execution phase. Each phase file should contain checklist-grade tasks with preconditions, files to change, expected output, done-when criteria, blockers, and dependencies or parallelism.
 5. If the docs are not ready, the skill should write the missing blockers into the right durable docs instead of continuing as chat-only advice.
+6. If user intent is materially ambiguous, or if unresolved scope, sequencing, dependencies, or acceptance would make the plan fake, the skill should ask concise clarifying questions before routing into execution planning.
 
 If the repo already has a docs structure, the skill should reuse the existing owners first and only normalize when the structure is drifting or execution planning actually requires it.
 
@@ -139,6 +140,7 @@ At a high level, the workflow will:
 
 - classify the request as current-state refresh, future-spec refinement, or actionable execution planning
 - treat explicit "do the next step", "start implementation", file-structure, or phase-splitting requests as actionable execution planning rather than more discussion
+- ask concise clarifying questions when user intent is materially ambiguous or when unresolved scope, dependencies, sequencing, or acceptance criteria would make an execution plan fake
 - read repository guidance first
 - try the bundled diff collector first
 - fall back to manual routing if the bundled collector is unavailable
@@ -146,7 +148,10 @@ At a high level, the workflow will:
 - pressure-test problem frame, system boundaries, decisions, contracts, and validation before inventing more structure
 - update the fewest authoritative docs possible
 - keep execution-ready future work in `docs/exec-plans/active/` and move completed plans into `docs/exec-plans/completed/`
-- when the user is explicitly moving into implementation and the key planning inputs already exist, materialize the planning scaffold, directory placement, and phase breakdown in the repository instead of replying with advice only
+- treat `plan_readiness` as a planning-surface signal, not as proof that a plan is already execution-ready
+- when the user is explicitly moving into implementation and the key planning inputs already exist, materialize the planning scaffold, directory placement, an active plan index, and one markdown file per execution phase instead of replying with advice only
+- require execution-ready phase files to use checklist-grade tasks with preconditions, files to change, expected outputs, done-when criteria, blockers, and dependency or parallelism notes
+- if an old execution plan is still a vague single document, split it into phase files when the phase boundaries are reliable, and ask before splitting when they are not
 - when execution is requested but still blocked by unresolved choices, persist those blockers in durable docs rather than leaving them only in chat
 - reuse healthy custom docs domains when their role is clear, and normalize only when drift or planning needs force it
 - stop after explaining what changed or why no doc update was needed
