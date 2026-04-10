@@ -136,6 +136,9 @@ The workflow will:
 - update the fewest authoritative docs possible
 - explicit execution-ready future work belongs in `docs/exec-plans/active/`, while exploratory or still-fluid work should tighten existing product or design docs first
 - audit stale execution plans even when git is clean, so done-marked plan files do not remain in the root or `active/`
+- move any plan marked `done`, `completed`, `passed`, `已完成`, or equivalent complete-state language out of `docs/exec-plans/active/` and into `docs/exec-plans/completed/` in the same pass
+- treat shared baseline or prerequisite plans the same way: if they are still evolving they stay in `active/`; if they are accepted they move to `completed/`, and later active phases should link to the stable `completed/` path instead of keeping the old placement alive
+- update `docs/exec-plans/index.md`, `docs/exec-plans/active/README.md`, umbrella plan docs, and cross-links after any lifecycle move so path semantics and content semantics stay aligned
 - reuse healthy custom docs domains when their role is clear instead of flattening them by default
 - distinguish validation truth from a bare `docs/exec-plans/` scaffold
 - use standard domains such as `docs/design-docs/`, `docs/product-specs/`, `docs/references/`, `docs/generated/`, `docs/exec-plans/`, `DESIGN.md`, `FRONTEND.md`, `PLANS.md`, `PRODUCT_SENSE.md`, `QUALITY_SCORE.md`, `RELIABILITY.md`, and `SECURITY.md` before inventing new folders
