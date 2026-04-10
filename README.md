@@ -150,7 +150,7 @@ At a high level, the workflow will:
 - keep execution-ready future work in `docs/exec-plans/active/` and move completed plans into `docs/exec-plans/completed/`
 - treat `plan_readiness` as a planning-surface signal, not as proof that a plan is already execution-ready
 - when the user is explicitly moving into implementation and the key planning inputs already exist, materialize the planning scaffold, directory placement, `docs/exec-plans/active/<plan-slug>/index.md`, and one markdown file per execution phase instead of replying with advice only
-- require execution-ready phase files to use checklist-grade tasks with preconditions, files to change, expected outputs, done-when criteria, blockers, and dependency or parallelism notes
+- follow the execution-plan contract for the required task schema inside each phase file
 - if an old execution plan is still a vague single document, split it into `active/<plan-slug>/` phase files when the phase boundaries are reliable, and ask before splitting when they are not
 - archive completed plans by moving the whole `active/<plan-slug>/` directory into `docs/exec-plans/completed/`; a completed phase file can stay in an otherwise active plan directory
 - when execution is requested but still blocked by unresolved choices, persist those blockers in durable docs rather than leaving them only in chat

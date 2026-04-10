@@ -560,7 +560,7 @@ domain_supports_contracts() {
 plan_file_has_done_status() {
   local path="$1"
 
-  grep -qiE '(状态|status)[[:space:]]*[：:][[:space:]]*(done|complete|completed|完成|已完成|✓)' "$path" 2>/dev/null
+  grep -qiE '(状态|status)[[:space:]]*[：:][[:space:]]*(done|complete|completed|passed|完成|已完成|✓)' "$path" 2>/dev/null
 }
 
 canonical_active_plan_dir_for_file() {
@@ -750,7 +750,7 @@ done
 
 plan_scaffold_state="missing"
 planning_surface_state="absent"
-active_plan_target="docs/exec-plans/active/"
+active_plan_target="docs/exec-plans/active/<plan-slug>/index.md"
 plan_readiness="not-earned-yet"
 
 if has_file "docs/exec-plans"; then
