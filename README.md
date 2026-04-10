@@ -23,6 +23,16 @@ The core workflow lives in plain Markdown at `docs-refresh/SKILL.md`, so it can 
 - New work lands in the right place: current truth in authoritative docs, fuzzy ideas in product/design docs, execution-ready work in `docs/exec-plans/active/`.
 - Your existing docs system stays usable as the repo grows instead of drifting into stale indexes, duplicate folders, and abandoned planning notes, because the collector maps healthy custom docs domains before recommending normalization.
 
+## Typical Use Flow
+
+1. Write a PRD and a spec first.
+2. Run `docs-refresh` to check boundaries, decisions, contracts, and validation gaps.
+3. If you want implementation to start, say it explicitly: "do the next step", "start implementation", "land the file structure", or "split this into phases".
+4. If the docs are ready, the skill should create or update the active execution plan under `docs/exec-plans/active/`, including file structure, phases, blockers, and acceptance points.
+5. If the docs are not ready, the skill should write the missing blockers into the right durable docs instead of continuing as chat-only advice.
+
+If the repo already has a docs structure, the skill should reuse the existing owners first and only normalize when the structure is drifting or execution planning actually requires it.
+
 ## Installation
 
 This repository currently ships a reusable skill folder, not a host-native plugin package.
