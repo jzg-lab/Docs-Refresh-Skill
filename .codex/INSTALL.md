@@ -16,7 +16,15 @@ If `docs-refresh` is already installed, replace the existing folder with the new
 
 ## Update
 
-Pull the latest repository changes and copy `docs-refresh/` into the same local skills directory again.
+Tell Codex to update the installed `docs-refresh` skill from this repository and replace the local `docs-refresh/` folder in the skills directory.
+
+Suggested prompt:
+
+```text
+Update the installed docs-refresh skill from https://github.com/jzg-lab/Docs-Refresh-Skill and replace the local docs-refresh folder in ${CODEX_HOME:-$HOME/.codex}/skills.
+```
+
+If that fails, pull the latest repository changes and copy `docs-refresh/` into the same local skills directory again.
 
 ## Verify
 

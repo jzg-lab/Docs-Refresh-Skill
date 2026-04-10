@@ -27,7 +27,7 @@ The core workflow lives in plain Markdown at `docs-refresh/SKILL.md`, so it can 
 
 This repository currently ships a reusable skill folder, not a host-native plugin package.
 
-That means people can use it today wherever this repository or a published bundle provides a concrete distribution path. Right now that means:
+Current distribution paths:
 
 - manual installation into a local skills directory
 - downloading the published ClawHub bundle and unpacking it into a local skills directory
@@ -35,7 +35,7 @@ That means people can use it today wherever this repository or a published bundl
 - ChatGPT/OpenAI skill upload or sharing flows
 - direct reuse of `docs-refresh/SKILL.md` in any agent stack that can consume prompt/skill folders
 
-It does **not** currently ship a Claude native marketplace package, Cursor marketplace package, Gemini extension manifest, Copilot plugin wrapper, or OpenCode plugin package.
+It does **not** currently ship a Claude marketplace package, Cursor marketplace package, Gemini extension, Copilot plugin wrapper, or OpenCode plugin package.
 
 ### ClawHub
 
@@ -91,6 +91,18 @@ If you want OpenCode to do the install for you, tell it:
 Fetch and follow instructions from https://raw.githubusercontent.com/jzg-lab/Docs-Refresh-Skill/main/.opencode/INSTALL.md
 ```
 
+## Updating
+
+After the first install, the simplest upgrade path is to tell your tool to refresh the installed `docs-refresh` copy using this repository as the upstream source.
+
+Suggested prompt:
+
+```text
+Update the installed docs-refresh skill from https://github.com/jzg-lab/Docs-Refresh-Skill and replace the local docs-refresh folder in the skills directory.
+```
+
+If the tool cannot do that directly, fall back to the install instructions and replace the existing `docs-refresh/` folder with a fresh copy.
+
 ### ChatGPT Skills
 
 Use the Skills UI upload flow for this skill from your computer, then install or share it inside your workspace using your plan's available skills controls.
@@ -105,13 +117,7 @@ Use `docs-refresh/SKILL.md` as the canonical workflow instructions in your own a
 
 If shell execution is available, also provide `docs-refresh/scripts/collect_changed_context.sh` so the workflow can gather consistent git context before deciding whether docs need to change.
 
-The workflow is routed. The top-level skill tries the bundled collector from the skill's own `docs-refresh/scripts/` directory first, reads `[repo_layout]`, `[planning]`, `[routing]`, and `[knowledge]` when available, and then follows exactly one matching mode file under `docs-refresh/modes/` plus the shared foundation checklist when early-project gaps still exist.
-
-Do not assume the target repository contains its own `scripts/collect_changed_context.sh`.
-
-If the bundled collector cannot be resolved or executed, the skill falls back to manual routing by inspecting git state and the repository's docs layout.
-
-Any platform-specific aliasing, registration, or metadata should be treated as an adapter layer around the core workflow, not as part of the workflow contract itself.
+The workflow is routed: it tries the bundled collector from the skill directory first, reads collector output when available, loads one matching mode file from `docs-refresh/modes/`, and falls back to manual routing when the collector cannot run. Do not assume the target repository contains its own `scripts/collect_changed_context.sh`.
 
 ## Optional OpenAI/Codex Adapter
 
@@ -123,25 +129,17 @@ That file is UI metadata for OpenAI-compatible surfaces. It is not, by itself, a
 
 Invoke the workflow however your host platform exposes reusable prompts or skills. In OpenAI/Codex-compatible surfaces, the packaged aliases can be wired to names such as `$docs-refresh` or `/docs-refresh`.
 
-The workflow will:
+At a high level, the workflow will:
 
 - classify the request as current-state refresh, future-spec refinement, or actionable execution planning
 - read repository guidance first
 - try the bundled diff collector first
 - fall back to manual routing if the bundled collector is unavailable
-- treat collector fields such as `repo_taxonomy_mode`, `taxonomy_health`, `role_map`, `normalization_candidates`, `migration_candidates`, `plan_readiness`, `stale_plan_placement`, and `active_plan_target` as the routing contract
-- read the collector's docs mode and foundation phase before loading detailed instructions when collector output exists
 - inspect only the code, schema, generated artifacts, and docs needed to confirm behavior or real planning constraints
 - pressure-test problem frame, system boundaries, decisions, contracts, and validation before inventing more structure
 - update the fewest authoritative docs possible
-- explicit execution-ready future work belongs in `docs/exec-plans/active/`, while exploratory or still-fluid work should tighten existing product or design docs first
-- audit stale execution plans even when git is clean, so done-marked plan files do not remain in the root or `active/`
-- move any plan marked `done`, `completed`, `passed`, `已完成`, or equivalent complete-state language out of `docs/exec-plans/active/` and into `docs/exec-plans/completed/` in the same pass
-- treat shared baseline or prerequisite plans the same way, and repair indexes and cross-links after lifecycle moves so path semantics and content semantics stay aligned
-- reuse healthy custom docs domains when their role is clear instead of flattening them by default
-- distinguish validation truth from a bare `docs/exec-plans/` scaffold
-- use standard domains such as `docs/design-docs/`, `docs/product-specs/`, `docs/references/`, `docs/generated/`, `docs/exec-plans/`, `DESIGN.md`, `FRONTEND.md`, `PLANS.md`, `PRODUCT_SENSE.md`, `QUALITY_SCORE.md`, `RELIABILITY.md`, and `SECURITY.md` before inventing new folders
-- when drift, duplicate authority, or execution planning requires standardization, ad hoc custom docs folders should be decomposed into the standard domains and their prior contents preserved under `old_docs/`
+- keep execution-ready future work in `docs/exec-plans/active/` and move completed plans into `docs/exec-plans/completed/`
+- reuse healthy custom docs domains when their role is clear, and normalize only when drift or planning needs force it
 - stop after explaining what changed or why no doc update was needed
 
 It will not stage, commit, or clean up git state automatically.
@@ -153,13 +151,7 @@ It will not stage, commit, or clean up git state automatically.
 - `structured`: repos that already have split doc domains, whether standard, custom-mapped, or mixed, and should preserve the usable taxonomy
 - `repair`: repos whose docs system exists but whose navigation or authority surfaces are stale enough to fix first
 
-Missing `AGENTS.md` alone does not imply `repair`. Sparse docs usually mean `bootstrap` or `minimal`, depending on whether the repository already has stable living docs.
-
-New repositories should grow in phases. `docs-refresh` should not generate a full docs tree on first contact unless the repository has already earned those durable domains.
-
-When a repository has earned `docs/exec-plans/` as a first-class documentation domain, the default scaffold is `docs/exec-plans/index.md`, `docs/exec-plans/active/`, and `docs/exec-plans/completed/`. Keep empty lifecycle buckets versioned with placeholder files such as `.gitkeep`, and add additional plan artifacts such as debt trackers only when they carry durable repository truth.
-
-In structured repos, treat the named domains and cross-cutting docs as intentional landing zones, not decorative examples. Healthy custom domains can stay in place while their role map remains clear; normalize only the conflicting surfaces.
+Missing `AGENTS.md` alone does not imply `repair`. Sparse docs usually mean `bootstrap` or `minimal`. New repositories should grow in phases instead of generating a full docs tree on first contact.
 
 ## Foundation Phases
 
@@ -169,44 +161,6 @@ In structured repos, treat the named domains and cross-cutting docs as intention
 - `operations`: close validation, rollout, risk, scorecard, and navigation drift inside the existing doc system
 
 This means the workflow does not treat PRD, SRS, architecture docs, or ADRs as mandatory filenames. It treats them as durable documentation responsibilities that may live in different files depending on repository maturity.
-
-## Eventual Shape
-
-This is an illustrative final-state example, not a required bootstrap scaffold:
-
-```text
-AGENTS.md
-ARCHITECTURE.md
-docs/
-├── design-docs/
-│   ├── index.md
-│   ├── core-beliefs.md
-│   └── ...
-├── exec-plans/
-│   ├── index.md
-│   ├── active/
-│   ├── completed/
-│   └── tech-debt-tracker.md
-├── generated/
-│   └── db-schema.md
-├── product-specs/
-│   ├── index.md
-│   ├── new-user-onboarding.md
-│   └── ...
-├── references/
-│   ├── design-system-reference-llms.txt
-│   ├── nixpacks-llms.txt
-│   ├── uv-llms.txt
-│   └── ...
-├── DESIGN.md
-├── FRONTEND.md
-├── PLANS.md
-├── PRODUCT_SENSE.md
-├── QUALITY_SCORE.md
-├── RELIABILITY.md
-├── SECURITY.md
-└── old_docs/
-```
 
 ## Repository Layout
 

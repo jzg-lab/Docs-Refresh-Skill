@@ -22,6 +22,18 @@ mkdir -p .opencode/skills
 cp -R Docs-Refresh-Skill/docs-refresh .opencode/skills/
 ```
 
+## Update
+
+Tell OpenCode to update the installed `docs-refresh` skill from this repository and replace the local `docs-refresh/` folder in the active skills directory.
+
+Suggested prompt:
+
+```text
+Update the installed docs-refresh skill from https://github.com/jzg-lab/Docs-Refresh-Skill and replace the local docs-refresh folder in the OpenCode skills directory.
+```
+
+If that fails, rerun the install steps and replace the existing `docs-refresh/` folder.
+
 ## Verify
 
 Start a new OpenCode session and use the native skill tooling to confirm that `docs-refresh` is available.
