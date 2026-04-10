@@ -563,6 +563,23 @@ plan_file_has_done_status() {
   grep -qiE '(状态|status)[[:space:]]*[：:][[:space:]]*(done|complete|completed|完成|已完成|✓)' "$path" 2>/dev/null
 }
 
+canonical_active_plan_dir_for_file() {
+  local rel_path="$1"
+
+  if [[ "$rel_path" =~ ^docs/exec-plans/active/([^/]+)/index\.md$ ]]; then
+    printf 'docs/exec-plans/active/%s/\n' "${BASH_REMATCH[1]}"
+    return 0
+  fi
+
+  return 1
+}
+
+is_canonical_active_plan_phase_file() {
+  local rel_path="$1"
+
+  [[ "$rel_path" =~ ^docs/exec-plans/active/[^/]+/[^/]+\.md$ ]] && [[ ! "$rel_path" =~ /index\.md$ ]]
+}
+
 add_existing_target() {
   local array_name="$1"
   local path="$2"
@@ -1092,12 +1109,25 @@ if has_file "docs/exec-plans"; then
 
   while IFS= read -r -d '' plan_file; do
     rel_plan_file="${plan_file#$repo_root/}"
+    stale_artifact=
 
     case "$rel_plan_file" in
       docs/exec-plans/index.md|docs/exec-plans/README.md|docs/exec-plans/completed/*)
         continue
         ;;
     esac
+
+    if canonical_active_plan_dir_for_file "$rel_plan_file" >/dev/null; then
+      stale_artifact="$(canonical_active_plan_dir_for_file "$rel_plan_file")"
+      if plan_file_has_done_status "$plan_file"; then
+        add_unique stale_plan_placement "$stale_artifact"
+      fi
+      continue
+    fi
+
+    if is_canonical_active_plan_phase_file "$rel_plan_file"; then
+      continue
+    fi
 
     if plan_file_has_done_status "$plan_file"; then
       add_unique stale_plan_placement "$rel_plan_file"

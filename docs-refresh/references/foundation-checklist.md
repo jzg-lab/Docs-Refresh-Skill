@@ -15,7 +15,7 @@ The goal is to strengthen project understanding before inventing more structure.
 - Split into a new subtree only after a domain has earned a second durable page.
 - Treat explicit "do the next step now" intent as a pressure signal. If PRD plus spec, or equivalent scope, constraints, contracts, and acceptance notes, already exist, the active planning subtree is earned even in an otherwise early repo.
 - Ask the user concise clarifying questions when routing intent is materially ambiguous or when unresolved scope, dependencies, sequencing, or acceptance criteria would make an execution plan fake.
-- Once execution is ready, prefer a plan index plus one markdown file per execution phase over a single narrative execution document.
+- Once execution is ready, prefer `docs/exec-plans/active/<plan-slug>/index.md` plus one markdown file per execution phase over a single narrative execution document.
 - If execution is requested but the plan would still be fake, persist blockers as durable open questions or assumptions in the repository instead of leaving them only in chat.
 
 ## Pressure-Test Questions

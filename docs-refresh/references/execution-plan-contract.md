@@ -7,7 +7,7 @@ The goal is to prevent descriptive plan prose from masquerading as an execution-
 ## Core Rule
 
 - An active execution plan must be taskified and phase-structured. Section headings alone are not enough.
-- Use a plan index plus one markdown file per execution phase under the active plan directory.
+- Use `docs/exec-plans/active/<plan-slug>/index.md` plus one markdown file per execution phase in the same plan directory.
 - `Step 1`, `Phase 1`, or narrative breakdowns can organize work, but they do not satisfy the contract unless each execution phase has its own markdown file and contains concrete checklist tasks.
 - Do not treat scaffold readiness as execution readiness. A repository may be ready for `docs/exec-plans/active/` while a specific draft plan is still too vague to execute.
 - If material ambiguity would change scope, routing, dependencies, sequencing, or acceptance, ask the user concise clarifying questions before you taskify the plan.
@@ -15,9 +15,11 @@ The goal is to prevent descriptive plan prose from masquerading as an execution-
 
 ## Minimum Plan Shape
 
+- The canonical layout is `docs/exec-plans/active/<plan-slug>/index.md` plus `docs/exec-plans/active/<plan-slug>/phase-01-*.md`, `phase-02-*.md`, and so on.
 - One index file should define the goal, scope, phase ordering, global constraints, and links to the phase files.
-- Each execution phase should live in its own markdown file.
+- Each execution phase should live in its own markdown file under the same `<plan-slug>/` directory.
 - The index should summarize sequencing and status; the phase files should carry the actionable details.
+- A plan is archived by moving the whole `<plan-slug>/` directory into `docs/exec-plans/completed/`.
 
 ## Minimum Task Shape
 
@@ -37,6 +39,7 @@ Each task must include:
 The plan is not execution-ready if any of these are true:
 
 - it keeps all execution detail in one monolithic markdown document instead of phase files
+- it mixes unrelated active plans in one shared directory without a stable `<plan-slug>/` boundary
 - it only contains explanatory prose or chapter headings
 - it cannot identify the concrete unit of work to complete next
 - it cannot say what files or surfaces are expected to change
@@ -47,7 +50,7 @@ The plan is not execution-ready if any of these are true:
 ## Existing Fuzzy Plans
 
 - If a repository already has a vague execution plan in a single document, do not keep extending that document once the user asks to execute.
-- If current docs and explicit user intent give you reliable phase boundaries, split that plan into an index plus phase files under the active plan directory.
+- If current docs and explicit user intent give you reliable phase boundaries, split that plan into `docs/exec-plans/active/<plan-slug>/index.md` plus phase files in the same plan directory.
 - If phase boundaries, dependencies, or acceptance remain materially unclear, ask before you split. Do not invent phase files from guesswork.
 
 ## Practical Test
