@@ -132,7 +132,7 @@ assert_contains "$skill_dir/agents/openai.yaml" 'preserving prior source materia
 assert_contains "$repo_root/README.md" 'mixed or custom docs trees get mapped before the workflow tries to normalize them'
 assert_contains "$repo_root/README.md" '`repo_taxonomy_mode`, `taxonomy_health`, `role_map`, `normalization_candidates`, `migration_candidates`, `plan_readiness`, `stale_plan_placement`, and `active_plan_target` as the routing contract'
 assert_contains "$repo_root/README.md" 'audit stale execution plans even when git is clean'
-assert_matches "$repo_root/README.md" 'move any plan marked .*docs/exec-plans/active/.*docs/exec-plans/completed/'
+assert_contains "$repo_root/README.md" 'move any whole `active/<plan-slug>/` plan directory or legacy single-file plan marked'
 assert_contains "$repo_root/README.md" 'repair indexes and cross-links after lifecycle moves so path semantics and content semantics stay aligned'
 assert_matches "$repo_root/README.md" 'default scaffold.*docs/exec-plans/index\.md.*docs/exec-plans/active/.*docs/exec-plans/completed/'
 assert_contains "$repo_root/README.md" 'placeholder files such as `.gitkeep`'

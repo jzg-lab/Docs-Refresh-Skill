@@ -768,6 +768,14 @@ if has_file "docs/exec-plans"; then
     if ! dir_has_entries "docs/exec-plans/active"; then
       add_unique missing_plan_scaffold_targets "docs/exec-plans/active/.gitkeep"
       plan_scaffold_state="partial"
+    else
+      while IFS= read -r active_plan_dir; do
+        rel_active_plan_dir="${active_plan_dir#$repo_root/}"
+        if ! has_file "$rel_active_plan_dir/index.md"; then
+          add_unique missing_plan_scaffold_targets "$rel_active_plan_dir/index.md"
+          plan_scaffold_state="partial"
+        fi
+      done < <(find "$repo_root/docs/exec-plans/active" -mindepth 1 -maxdepth 1 -type d 2>/dev/null | sort)
     fi
   else
     add_unique missing_plan_scaffold_targets "docs/exec-plans/active/"

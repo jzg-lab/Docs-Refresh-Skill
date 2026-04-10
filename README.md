@@ -159,7 +159,7 @@ At a high level, the workflow will:
 
 It will not stage, commit, or clean up git state automatically.
 
-Plan lifecycle and normalization rules are deliberate: audit stale execution plans even when git is clean, move any plan marked `done`, `completed`, `passed`, `已完成`, or equivalent complete-state language out of `docs/exec-plans/active/` and into `docs/exec-plans/completed/` in the same pass, and repair indexes and cross-links after lifecycle moves so path semantics and content semantics stay aligned.
+Plan lifecycle and normalization rules are deliberate: audit stale execution plans even when git is clean, move any whole `active/<plan-slug>/` plan directory or legacy single-file plan marked `done`, `completed`, `passed`, `已完成`, or equivalent complete-state language into `docs/exec-plans/completed/` in the same pass, and repair indexes and cross-links after lifecycle moves so path semantics and content semantics stay aligned.
 
 The default scaffold is `docs/exec-plans/index.md`, `docs/exec-plans/active/`, and `docs/exec-plans/completed/`, with placeholder files such as `.gitkeep` keeping empty lifecycle buckets versioned.
 
