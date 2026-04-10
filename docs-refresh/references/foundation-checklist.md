@@ -13,6 +13,8 @@ The goal is to strengthen project understanding before inventing more structure.
 - Exploratory future work belongs in product or design docs; execution-ready work belongs in `docs/exec-plans/active/`.
 - Do not treat an empty `docs/exec-plans/` scaffold as validation truth by itself.
 - Split into a new subtree only after a domain has earned a second durable page.
+- Treat explicit "do the next step now" intent as a pressure signal. If PRD plus spec, or equivalent scope, constraints, contracts, and acceptance notes, already exist, the active planning subtree is earned even in an otherwise early repo.
+- If execution is requested but the plan would still be fake, persist blockers as durable open questions or assumptions in the repository instead of leaving them only in chat.
 
 ## Pressure-Test Questions
 

@@ -119,6 +119,8 @@ If shell execution is available, also provide `docs-refresh/scripts/collect_chan
 
 The workflow is routed: it tries the bundled collector from the skill directory first, reads collector output when available, loads one matching mode file from `docs-refresh/modes/`, and falls back to manual routing when the collector cannot run. Do not assume the target repository contains its own `scripts/collect_changed_context.sh`.
 
+When the collector succeeds, treat `repo_taxonomy_mode`, `taxonomy_health`, `role_map`, `normalization_candidates`, `migration_candidates`, `plan_readiness`, `stale_plan_placement`, and `active_plan_target` as the routing contract.
+
 ## Optional OpenAI/Codex Adapter
 
 This repository also includes an optional OpenAI-compatible adapter under `docs-refresh/agents/openai.yaml`.
@@ -132,6 +134,7 @@ Invoke the workflow however your host platform exposes reusable prompts or skill
 At a high level, the workflow will:
 
 - classify the request as current-state refresh, future-spec refinement, or actionable execution planning
+- treat explicit "do the next step", "start implementation", file-structure, or phase-splitting requests as actionable execution planning rather than more discussion
 - read repository guidance first
 - try the bundled diff collector first
 - fall back to manual routing if the bundled collector is unavailable
@@ -139,10 +142,18 @@ At a high level, the workflow will:
 - pressure-test problem frame, system boundaries, decisions, contracts, and validation before inventing more structure
 - update the fewest authoritative docs possible
 - keep execution-ready future work in `docs/exec-plans/active/` and move completed plans into `docs/exec-plans/completed/`
+- when the user is explicitly moving into implementation and the key planning inputs already exist, materialize the planning scaffold, directory placement, and phase breakdown in the repository instead of replying with advice only
+- when execution is requested but still blocked by unresolved choices, persist those blockers in durable docs rather than leaving them only in chat
 - reuse healthy custom docs domains when their role is clear, and normalize only when drift or planning needs force it
 - stop after explaining what changed or why no doc update was needed
 
 It will not stage, commit, or clean up git state automatically.
+
+Plan lifecycle and normalization rules are deliberate: audit stale execution plans even when git is clean, move any plan marked `done`, `completed`, `passed`, `已完成`, or equivalent complete-state language out of `docs/exec-plans/active/` and into `docs/exec-plans/completed/` in the same pass, and repair indexes and cross-links after lifecycle moves so path semantics and content semantics stay aligned.
+
+The default scaffold is `docs/exec-plans/index.md`, `docs/exec-plans/active/`, and `docs/exec-plans/completed/`, with placeholder files such as `.gitkeep` keeping empty lifecycle buckets versioned. In other words, the default scaffold is `docs/exec-plans/index.md`, `docs/exec-plans/active/`, and `docs/exec-plans/completed/`.
+
+Explicit execution-ready future work belongs in `docs/exec-plans/active/`, while exploratory or still-fluid work should tighten existing product or design docs first. In policy terms, explicit execution-ready future work belongs in `docs/exec-plans/active/`, while exploratory or still-fluid work should tighten existing product or design docs first. Also: reuse healthy custom docs domains when their role is clear instead of flattening them by default, distinguish validation truth from a bare `docs/exec-plans/` scaffold, and when drift, duplicate authority, or execution planning requires standardization, ad hoc custom docs folders should be decomposed into the standard domains and their prior contents preserved under `old_docs/`.
 
 ## Modes
 
@@ -161,6 +172,44 @@ Missing `AGENTS.md` alone does not imply `repair`. Sparse docs usually mean `boo
 - `operations`: close validation, rollout, risk, scorecard, and navigation drift inside the existing doc system
 
 This means the workflow does not treat PRD, SRS, architecture docs, or ADRs as mandatory filenames. It treats them as durable documentation responsibilities that may live in different files depending on repository maturity.
+
+## Eventual Shape
+
+This is an illustrative final-state example, not a required bootstrap scaffold:
+
+```text
+AGENTS.md
+ARCHITECTURE.md
+docs/
+├── design-docs/
+│   ├── index.md
+│   ├── core-beliefs.md
+│   └── ...
+├── exec-plans/
+│   ├── index.md
+│   ├── active/
+│   ├── completed/
+│   └── tech-debt-tracker.md
+├── generated/
+│   └── db-schema.md
+├── product-specs/
+│   ├── index.md
+│   ├── new-user-onboarding.md
+│   └── ...
+├── references/
+│   ├── design-system-reference-llms.txt
+│   ├── nixpacks-llms.txt
+│   ├── uv-llms.txt
+│   └── ...
+├── DESIGN.md
+├── FRONTEND.md
+├── PLANS.md
+├── PRODUCT_SENSE.md
+├── QUALITY_SCORE.md
+├── RELIABILITY.md
+├── SECURITY.md
+└── old_docs/
+```
 
 ## Repository Layout
 

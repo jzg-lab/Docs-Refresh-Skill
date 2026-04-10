@@ -12,6 +12,7 @@ Keep the workflow platform-neutral. Host-specific aliases, launcher syntax, and 
 ## Shared Rules
 
 - Classify the user request before mode routing: current-state refresh, future-spec refinement, or actionable execution planning.
+- Treat explicit intent to "start implementation", "do the next step", "land the file structure", "split phases", or equivalent execute-now language as actionable execution planning, not as a request for more chat-only refinement.
 - The repository is the record system. Durable knowledge belongs in versioned docs near the code, not in chat.
 - `AGENTS.md` is a map, not a manual. Keep it short, stable, and navigational.
 - Update the smallest authoritative doc that owns the fact.
@@ -63,11 +64,15 @@ After you choose a mode, use the collector's `knowledge_phase` when available. I
 - Force a documentation review when the change touches APIs, schema, CLI flags, run modes, scheduler behavior, trigger flow, core architecture, state model, external contracts, durable entry points, documented core beliefs, or stale navigation.
 - If the signal is ambiguous, inspect the diff before deciding. Do not update docs just because code changed.
 - Use current-state docs for what is true today, plan artifacts for explicit committed future work, and product or design docs for future behavior that is still being shaped.
+- When the user explicitly wants the next step executed and the repository already has enough future-work truth to constrain implementation, do not stop at prose. Land the execution structure in the repository in the same pass: scaffold or reuse the planning surface, create the active plan, and encode file structure, phase breakdown, acceptance points, and blockers there.
 - Planning split: Do not confuse plan scaffolding with validation truth. Create or update `docs/exec-plans/active/` only for execution-ready work; otherwise tighten `PRODUCT_SENSE.md`, `DESIGN.md`, `FRONTEND.md`, `docs/product-specs/`, or `docs/design-docs/`.
+- In `bootstrap` and `minimal` repos, explicit execution intent plus an adequate problem frame and implementation-defining inputs such as PRD plus spec, or equivalent scope, constraints, contracts, and acceptance notes, is enough to earn the first planning subtree.
+- If execution intent is explicit but key decisions are still missing, create or update the owning future-work docs with durable blockers in the repository, such as `docs/design-docs/`, `docs/product-specs/`, `OPEN_QUESTIONS.md`, or `ASSUMPTIONS.md`, instead of replying with chat-only uncertainty.
 - If the collector reports `repo_taxonomy_mode=custom` or `repo_taxonomy_mode=mixed`, reuse healthy custom domains when their `role_map` is clear. Normalize only the smallest conflicting surfaces identified by `normalization_candidates` or `migration_candidates`.
 - Plan lifecycle: In structured repos with a standard `docs/exec-plans/` tree, audit `stale_plan_placement` even when git is clean. Move done-marked plans from the root or `active/` into `completed/` in the same pass, including shared baseline or prerequisite plans once they are accepted. Update indexes, umbrella docs, and cross-links so path semantics and content semantics stay aligned. Treat `completed in content, still in active/` as a lifecycle inconsistency to fix immediately.
 - Treat `old_docs/` as a legacy archive, not as a convergence point for new truth.
 - In `bootstrap` and `minimal` repos, strengthen the founding pack before expanding taxonomy. A new docs subtree is the last move, not the first.
+- Exception: when the user is clearly asking to execute next and the key planning inputs already exist, the planning subtree is no longer premature. Create the minimum `docs/exec-plans/` scaffold needed and place the active plan in the same pass.
 - When a repository has earned `docs/exec-plans/` as a durable plan domain, keep that subtree navigable. The default scaffold is `docs/exec-plans/index.md`, `docs/exec-plans/active/`, and `docs/exec-plans/completed/`.
 - When the default `docs/exec-plans/` scaffold is missing and you can run bundled files from the skill directory, use [scripts/scaffold_exec_plans.sh](scripts/scaffold_exec_plans.sh) against `[repo-root]`. It creates the scaffold without overwriting existing plan docs and keeps empty lifecycle buckets versioned with placeholder files.
 - If explicit planning intent targets `docs/exec-plans/` and the collector reports `plan_readiness=needs-scaffold` or `plan_readiness=needs-standardization`, create the minimum standard scaffold needed and land the active plan in the same pass. When you migrate a custom planning surface, preserve the prior material under `old_docs/`.

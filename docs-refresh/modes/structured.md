@@ -21,7 +21,9 @@ The repository already has split docs domains. That can mean the standard taxono
   - Negative example: changing `active/README.md` or a plan body to say a plan is complete while the file still lives under `active/`.
   - Correct outcome: move the plan into `completed/` and repair every navigation or cross-reference entry point that still points at the old `active/` path.
 - When the user brings explicit future work that is ready for execution, create or update an active plan artifact under `docs/exec-plans/active/`. If the collector reports `plan_readiness=needs-standardization`, create the standard scaffold and migrate only the smallest planning surface needed.
+- When explicit execution intent arrives after product or spec docs have already converged, do not answer with structure suggestions alone. Materialize the directory placement, active plan, and phase/file breakdown in the repository in the same pass.
 - If the work is still exploratory, incomplete, or not yet execution-ready, tighten `PRODUCT_SENSE.md`, `DESIGN.md`, `FRONTEND.md`, `docs/product-specs/`, or `docs/design-docs/` instead of creating an active plan.
+- If the work is not execution-ready because of missing decisions, persist those open questions in the owning docs surfaces instead of leaving them as chat-only follow-up.
 - Custom domains that map cleanly and are not drifting can remain in place for current-state, reference, or validation truth.
 - Normalize ad hoc custom docs folders into the standard domains and archive the prior layout under `old_docs/` unless the repository already defines a different archive location. Use the smallest migration consistent with `taxonomy_health`, `normalization_candidates`, and explicit planning intent.
 - Treat `old_docs/` as legacy archive material, not as a place to land new truth.

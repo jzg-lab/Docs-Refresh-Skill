@@ -10,6 +10,7 @@ The repository has a docs system, but its navigation, taxonomy map, or authority
 - If `repo_taxonomy_mode` is `custom` or `mixed`, repair the role map before you migrate anything. Broken custom navigation is still a map problem first.
 - Do not let missing `docs/exec-plans/` scaffold hijack explicit planning intent.
 - When the user is creating execution-ready future work, repair only the minimum missing scaffold needed to land the active plan, then place that plan in `docs/exec-plans/active/` in the same pass.
+- If the missing piece is not scaffold but unresolved design or product decisions, write those blockers into durable docs in the same pass instead of answering with chat-only uncertainty.
 - Restore a usable map first, then update the smallest authoritative document that owns the changed fact.
 
 ## Repair Triggers
